@@ -4,7 +4,7 @@
 
 ```javascript
 {
-    "code": xx,        //结果码，0表示成果
+    "code": xx,        //结果码，0表示成果，当code为-1时，强制重新登录
     "data": Object,    //为dict、string，list或undefined
     "msg": "请求的信息（错误原因、成功等）"
 }
@@ -30,10 +30,9 @@ Authorization: Bear eyJ0eXasd123kgGTS891516DGrqoifjrjgo...
 
 ### token
 
-| 方法     | 含义  | URL参数 | 请求体                    | data类型    | data内容   | 备注    |
-| ------ | --- | ----- | ---------------------- | --------- | -------- | ----- |
-| GET    | 登录  |       | `{"user":"","pwd":""}` | string    | token字符串 | 获取JWT |
-| DELETE | 登出  |       | undefined              | undefined |          |       |
+| 方法  | 含义  | URL参数 | 请求体                    | data类型 | data内容   | 备注    |
+| --- | --- | ----- | ---------------------- | ------ | -------- | ----- |
+| GET | 登录  |       | `{"user":"","pwd":""}` | string | token字符串 | 获取JWT |
 
 ### password
 
@@ -58,12 +57,12 @@ Authorization: Bear eyJ0eXasd123kgGTS891516DGrqoifjrjgo...
 
 ### books
 
-| 方法     | 含义        | URL参数      | 请求体                             | data类型    | data内容          | 备注                                                 |
-| ------ | --------- | ---------- | ------------------------------- | --------- | --------------- | -------------------------------------------------- |
-| GET    | 获取当前有的练习册 | limit,page |                                 | Object    | `{"bid":bname}` | limit指每页数量，page指当前是第几页，bid指当前练习册的ID，bname指每本练习册的名字 |
-| POST   | 新增练习册     |            | `{'bname':'xxx','grade':grade}` | string    | bid             | 返回新增练习册的ID,grade为练习册适用年级                           |
-| PUT    | 修改练习册名字   | /bid       | `{'bname':'yyy','grade':grade}` | undefined |                 | 返回修改练习册的ID                                         |
-| DELETE | 删除练习册     | /bid       |                                 | undefined |                 |                                                    |
+| 方法     | 含义        | URL参数      | 请求体                             | data类型    | data内容           | 备注                                                 |
+| ------ | --------- | ---------- | ------------------------------- | --------- | ---------------- | -------------------------------------------------- |
+| GET    | 获取当前有的练习册 | limit,page |                                 | Object    | `{bid:bname...}` | limit指每页数量，page指当前是第几页，bid指当前练习册的ID，bname指每本练习册的名字 |
+| POST   | 新增练习册     |            | `{'bname':'xxx','grade':grade}` | string    | bid              | 返回新增练习册的ID,grade为练习册适用年级                           |
+| PUT    | 修改练习册名字   | /bid       | `{'bname':'yyy','grade':grade}` | undefined |                  | 返                                                  |
+| DELETE | 删除练习册     | /bid       |                                 | undefined |                  |                                                    |
 
 ### questions
 
@@ -107,9 +106,9 @@ Authorization: Bear eyJ0eXasd123kgGTS891516DGrqoifjrjgo...
 
 ### teachers
 
-| 方法     | 含义     | URL参数      | 请求体               | data类型    | data内容           | 备注                  |
-| ------ | ------ | ---------- | ----------------- | --------- | ---------------- | ------------------- |
-| GET    | 获取所有教师 | limit,page |                   | Object    | `{tid:tname...}` | tid指教师id,tname为教师名字 |
-| POST   | 新增教师账号 |            | `{tid:tname}`     | undefined |                  |                     |
-| PUT    | 修改教师信息 | /tid       | `{'tname':tname}` | undefined |                  |                     |
-| DELETE | 删除教师信息 | /tid       |                   | undefined |                  |                     |
+| 方法     | 含义     | URL参数      | 请求体                          | data类型    | data内容           | 备注                  |
+| ------ | ------ | ---------- | ---------------------------- | --------- | ---------------- | ------------------- |
+| GET    | 获取所有教师 | limit,page |                              | Object    | `{tid:tname...}` | tid指教师id,tname为教师名字 |
+| POST   | 新增教师账号 |            | `{'tid':tid,'tname':tname}`  | string    | tid              |                     |
+| PUT    | 修改教师信息 | /tid       | `{'tname':tname, 'pwd':pwd}` | undefined |                  |                     |
+| DELETE | 删除教师信息 | /tid       |                              | undefined |                  |                     |
