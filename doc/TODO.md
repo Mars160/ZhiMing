@@ -12,17 +12,17 @@
 
 ## API搭建情况表
 
-| 资源\方法     | GET | POST | PUT | DELETE |
-| --------- | --- | ---- | --- | ------ |
-| token     |     | -    | -   |        |
-| password  | -   | -    |     | -      |
-| teachers  |     |      |     |        |
-| books     |     |      |     |        |
-| questions |     |      |     |        |
-| classes   |     |      |     |        |
-| students  |     |      |     |        |
-| points    |     |      |     |        |
-| homework  |     |      | -   | -      |
+| 资源\方法     | GET | POST | PUT | DELETE | 备注  |
+| --------- | --- | ---- | --- | ------ | --- |
+| token     | √   | -    | -   | -      | 已测试 |
+| password  | -   | -    | √   | -      | 已测试 |
+| teachers  | √   | √    | √   | √      | 已测试 |
+| books     | √   | √    | √   | √      | 未测试 |
+| questions |     |      |     |        |     |
+| classes   |     |      |     |        |     |
+| students  |     |      |     |        |     |
+| points    |     |      |     |        |     |
+| homework  |     |      | -   | -      |     |
 
 ## 前端编写情况
 
