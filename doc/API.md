@@ -62,8 +62,8 @@ Authorization: Bear eyJ0eXasd123kgGTS891516DGrqoifjrjgo...
 | ------ | --------- | ---------- | ----------------- | --------- | --------------- | -------------------------------------------------- |
 | GET    | 获取当前有的练习册 | limit,page |                   | Object    | `{"bid":bname}` | limit指每页数量，page指当前是第几页，bid指当前练习册的ID，bname指每本练习册的名字 |
 | POST   | 新增练习册     |            | `{'bname':'xxx'}` | string    | bid             | 返回新增练习册的ID                                         |
-| PUT    | 修改练习册名字   | bid        | `{'bname':'yyy'}` | undefined |                 | 返回修改练习册的ID                                         |
-| DELETE | 删除练习册     | bid        |                   | undefined |                 |                                                    |
+| PUT    | 修改练习册名字   | /bid       | `{'bname':'yyy'}` | undefined |                 | 返回修改练习册的ID                                         |
+| DELETE | 删除练习册     | /bid       |                   | undefined |                 |                                                    |
 
 ### questions
 
@@ -71,17 +71,17 @@ Authorization: Bear eyJ0eXasd123kgGTS891516DGrqoifjrjgo...
 | ------ | ---------- | ---------------------------- | ------------------------------------ | --------- | ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
 | GET    | 获取当前练习册的题目 | bid,limit,page,orderby,order |                                      | Object    | `{qid:{'qname':qname,'points':{pid:pname...},’rightnum‘:80,'totalnum':100}}` | URL参数中，bid指当前的练习册id,orderby为排序依据（id，rate等）,order分辨升降序。data中的id1为当前题目id，qname指题干，point指考察点 |
 | POST   | 新建题目       | bid                          | `{'qname':qname,'point':[pid...]}`   | string    | qid                                                                          | 返回当前题目id，pid指知识点id                                                                        |
-| PUT    | 修改题目       | qid                          | `{'qname':qname,'point':[p1,p2...]}` | undefined |                                                                              |                                                                                           |
-| DELETE | 删除题目       | qid                          |                                      | undefined |                                                                              |                                                                                           |
+| PUT    | 修改题目       | /qid                         | `{'qname':qname,'point':[p1,p2...]}` | undefined |                                                                              |                                                                                           |
+| DELETE | 删除题目       | /qid                         |                                      | undefined |                                                                              |                                                                                           |
 
 ### classes
 
-| 方法     | 含义          | URL参数          | 请求体  | data类型    | data内容                                            | 备注                  |
-| ------ | ----------- | -------------- | ---- | --------- | ------------------------------------------------- | ------------------- |
-| GET    | 获取当前教师的所有班级 | limit,page     |      | Object    | `{cid:{'cname':cname,'number':人数,'grade':grade}}` | cid为班级id            |
-| POST   | 新建班级        | name,grade     | File | string    | cid                                               | 上传包含学生学号、姓名的excel文件 |
-| PUT    | 修改班级        | cid,name,grade |      | undefined |                                                   |                     |
-| DELETE | 删除班级        |                |      | undefined |                                                   |                     |
+| 方法     | 含义          | URL参数       | 请求体                             | data类型    | data内容                                            | 备注                  |
+| ------ | ----------- | ----------- | ------------------------------- | --------- | ------------------------------------------------- | ------------------- |
+| GET    | 获取当前教师的所有班级 | limit,page  |                                 | Object    | `{cid:{'cname':cname,'number':人数,'grade':grade}}` | cid为班级id            |
+| POST   | 新建班级        | cname,grade | File                            | string    | cid                                               | 上传包含学生学号、姓名的excel文件 |
+| PUT    | 修改班级        | /cid        | `{'cname':cname,'grade':grade}` | undefined |                                                   |                     |
+| DELETE | 删除班级        | /cid        |                                 | undefined |                                                   |                     |
 
 ### students
 
@@ -89,8 +89,8 @@ Authorization: Bear eyJ0eXasd123kgGTS891516DGrqoifjrjgo...
 | ------ | --------- | -------------- | ----------------- | --------- | ----------------------------------------------------------- | -------------------------------------------- |
 | GET    | 获取当前班级的学生 | cid,limit,page |                   | Object    | `{sid:{'sname':sname,'rate':rate,'points':{pid:rate1...}}}` | sid指学生id（学号），rate指总正确率。pid指考点ID，raten指该考点正确率 |
 | POST   | 在班级中新增学生  | cid            | `{'sname':sname}` | string    | sid                                                         |                                              |
-| PUT    | 修改学生信息    | sid            | `{'sname':sname}` | undefined |                                                             |                                              |
-| DELETE | 移除该学生     | sid            |                   | undefined |                                                             |                                              |
+| PUT    | 修改学生信息    | /sid           | `{'sname':sname}` | undefined |                                                             |                                              |
+| DELETE | 移除该学生     | /sid           |                   | undefined |                                                             |                                              |
 
 ### points
 
@@ -98,8 +98,8 @@ Authorization: Bear eyJ0eXasd123kgGTS891516DGrqoifjrjgo...
 | ------ | -------- | ---------- | ----------------- | --------- | ----------------- | ----------------- |
 | GET    | 获取当前所有考点 | limit,page |                   | Object    | `{pid1:pname...}` |                   |
 | POST   | 新建考点     |            | `{'pname':pname}` | string    | pid               |                   |
-| PUT    | 修改题目     | pid        | `{'pname':pname}` | undefined |                   | 这会导致所有原先该知识点的位置更名 |
-| DELETE | 删除题目     | pid        |                   | undefined |                   |                   |
+| PUT    | 修改题目     | /pid       | `{'pname':pname}` | undefined |                   | 这会导致所有原先该知识点的位置更名 |
+| DELETE | 删除题目     | /pid       |                   | undefined |                   |                   |
 
 ---
 
@@ -111,5 +111,5 @@ Authorization: Bear eyJ0eXasd123kgGTS891516DGrqoifjrjgo...
 | ------ | ------ | ---------- | ----------------- | --------- | ---------------- | ------------------- |
 | GET    | 获取所有教师 | limit,page |                   | Object    | `{tid:tname...}` | tid指教师id,tname为教师名字 |
 | POST   | 新增教师账号 |            | `{tid:tname}`     | undefined |                  |                     |
-| PUT    | 修改教师信息 | tid        | `{'tname':tname}` | undefined |                  |                     |
-| DELETE | 删除教师信息 | tid        |                   | undefined |                  |                     |
+| PUT    | 修改教师信息 | /tid       | `{'tname':tname}` | undefined |                  |                     |
+| DELETE | 删除教师信息 | /tid       |                   | undefined |                  |                     |
