@@ -8,4 +8,4 @@ engine = create_engine(MYSQL_STRING, echo=True)
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
 
-db = Session()
+session = Session()
