@@ -36,6 +36,6 @@
 
 [开发情况](./doc/TODO.md)
 
-[Demo](https://zhiming.somewang.top/)（尚未发布）
+[Demo](https://zhiming.somewang.top/)（每天0点和12点自动更新）
 
 Vue + Flask
