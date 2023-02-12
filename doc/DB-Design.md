@@ -10,7 +10,7 @@
 
 | 字段    | 类型      | 含义     | 备注        |
 | ----- | ------- | ------ | --------- |
-| uid   | varchar | 用户角色id | 主键，自增     |
+| uid   | integer | 用户角色id | 主键，自增     |
 | uname | varchar | 用户名    |           |
 | role  | enum    | 用户角色   | 管理员、教师、学生 |
 | pwd   | varchar | 加密后的密码 |           |
@@ -19,7 +19,7 @@
 
 | 字段    | 类型      | 含义    | 备注    |
 | ----- | ------- | ----- | ----- |
-| bid   | varchar | 练习册id | 主键、自增 |
+| bid   | integer | 练习册id | 主键、自增 |
 | bname | varchar | 练习册名  | 不重复   |
 | grade | integer | 适用年级  |       |
 
@@ -27,7 +27,7 @@
 
 | 字段    | 类型      | 含义     | 备注     |
 | ----- | ------- | ------ | ------ |
-| qid   | varchar | 题目id   | 主键、自增  |
+| qid   | integer | 题目id   | 主键、自增  |
 | qname | varchar | 题干     | 不重复    |
 | level | integer | 当前题目等级 | （可能会加） |
 
@@ -35,7 +35,7 @@
 
 | 字段    | 类型      | 含义   | 备注    |
 | ----- | ------- | ---- | ----- |
-| cid   | varchar | 班级id | 主键、自增 |
+| cid   | integer | 班级id | 主键、自增 |
 | cname | varchar | 班级名  | 不重复   |
 | grade | integer | 班级年级 |       |
 
@@ -43,7 +43,7 @@
 
 | 字段    | 类型      | 含义    | 备注    |
 | ----- | ------- | ----- | ----- |
-| pid   | varchar | 知识点id | 主键、自增 |
+| pid   | integer | 知识点id | 主键、自增 |
 | pname | varchar | 知识点名  | 不重复   |
 
 ---
@@ -58,7 +58,7 @@
 
 | 字段   | 类型      | 含义              | 备注    |
 | ---- | ------- | --------------- | ----- |
-| ucid | varchar | user和class关系的id | 主键、自增 |
+| ucid | integer | user和class关系的id | 主键、自增 |
 | uid  | varchar | 用户id            |       |
 | cid  | varchar | 班级id            |       |
 
