@@ -36,6 +36,8 @@
 
 [开发情况](./doc/TODO.md)
 
+[数据库设计](./doc/DB-Design.md)
+
 [Demo](https://zhiming.somewang.top/)（每天0点和12点自动更新）
 
 Vue + Flask
