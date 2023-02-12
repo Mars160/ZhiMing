@@ -157,3 +157,6 @@ pnpm-debug.log*
 
 #uwsgi
 uwsgi.ini
+
+#password等
+dbconfig.py
