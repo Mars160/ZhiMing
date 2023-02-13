@@ -1,11 +1,14 @@
 <template>
-  <Login v-model:show=show></Login>
+  <Login :show="show"></Login>
 </template>
 
 <script setup>
-import Login from "@/components/common/Login.vue";
+import Login from "@/components/common/LoginComponent.vue";
 
-const show = true
+let show = true
+if ('token' in localStorage) {
+  show = false
+}
 </script>
 
 <style scoped>

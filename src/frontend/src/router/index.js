@@ -1,11 +1,11 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import AdminIndex from "@/views/admin/Admin-Index.vue";
 
 const routes = [
   {
-    path: '/',
-    name: 'home',
-    component: HomeView
+    path: '/admin',
+    name: 'admin',
+    component: AdminIndex
   },
   {
     path: '/about',

@@ -3,28 +3,105 @@
       v-model="show_login_dialog"
       center
       align-center
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :show-close="false"
+      title="登录"
   >
-
+    <el-row :gutter="20">
+      <span class="inline-flex w-20 items-center">用户名:</span>
+      <el-input
+          class="w-80"
+          v-model="user"
+          placeholder="请输入用户名"
+      />
+    </el-row>
+    <el-row :gutter="20" class="mt-10">
+      <span class="inline-flex w-20 items-center">密码:</span>
+      <el-input
+          class="w-80"
+          v-model="pwd"
+          placeholder="请输入密码"
+          show-password
+      />
+    </el-row>
+    <div class="footer">
+      <el-button
+        type="primary"
+        class="mt-20 w-80"
+        @click="login"
+      >
+        登录
+      </el-button>
+    </div>
   </el-dialog>
-
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import {defineProps, ref} from 'vue'
+import axios from "axios";
 
-const emits = defineEmits(['show_login_dialog']);
 const props = defineProps({
   show: {
     type: Boolean,
-    default: false
+    default: true
   }
 })
-const show_login_dialog = ({
-  get: () => props.show,
-  set: (value) => emits('update:modelValue', value)
-})
+
+const show_login_dialog = ref(props.show)
+
+const user = ref('')
+const pwd = ref('')
+
+function login() {
+  const data = {
+    user: user.value,
+    pwd: pwd.value
+  }
+  axios.post('/v1/token',
+    data
+  ).then((res) => {
+    const result = res.data
+    if (result.code === 0){
+      localStorage.setItem('token', result.data)
+      //刷新页面
+      window.location.reload()
+    } else {
+      alert(result.msg)
+    }
+  }).catch((err) => {
+    console.log(err)
+    alert("登录失败")
+  })
+}
 </script>
 
 <style scoped>
+.inline-flex {
+  display: inline-flex;
+}
 
+.items-center {
+  align-items: center;
+}
+
+.w-20 {
+  width: 20%;
+}
+
+.w-80 {
+  width: 80%;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
+
+.footer {
+  text-align: center;
+}
 </style>
