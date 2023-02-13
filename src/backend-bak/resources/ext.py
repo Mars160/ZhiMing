@@ -1,4 +1,4 @@
-import flask_restful as restful
+import flask_restx as restful
 from ext import session
 from models import *
 from flask_jwt_extended import jwt_required, get_jwt_identity

@@ -1,5 +1,5 @@
 from .ext import *
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_refresh_token
 
 
 class Token(restful.Resource):
@@ -17,7 +17,7 @@ class Token(restful.Resource):
             return response
         else:
             if user.checkPassword(pwd):
-                response['data'] = create_access_token(identity=name, expires_delta=False)
+                response['data'] = create_refresh_token(identity=name)
                 return response
             else:
                 response['code'] = 403
