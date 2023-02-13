@@ -7,25 +7,18 @@ class Teachers(restful.Resource):
         response = response_base.copy()
 
         uid = get_jwt_identity()
-        user = session.query(User).filter(User.uid == uid).first()
-        if user is None:
-            response['code'] = -1
-            response['msg'] = 'user not found'
+        if not check_permission(uid, ['管理员']):
+            response['msg'] = 'permission denied'
+            response['code'] = 403
             return response
-        else:
-            if not check_permission(uid, ['管理员']):
-                response['msg'] = 'permission denied'
-                response['code'] = 403
-                return response
-            else:
-                # 获取url中的参数
-                limit = request.args.get('limit', 10, type=int)
-                page = request.args.get('page', 1, type=int)
-                teachers = session.query(User).filter(User.role == '教师').limit(limit).offset((page - 1) * limit).all()
-                response['data'] = {}
-                for teacher in teachers:
-                    response['data'][teacher.uid] = teacher.uname
-            return response
+        # 获取url中的参数
+        limit = request.args.get('limit', 10, type=int)
+        page = request.args.get('page', 1, type=int)
+        teachers = session.query(User).filter(User.role == '教师').limit(limit).offset((page - 1) * limit).all()
+        response['data'] = {}
+        for teacher in teachers:
+            response['data'][teacher.uid] = teacher.uname
+        return response
 
     @jwt_required()
     def post(self):
