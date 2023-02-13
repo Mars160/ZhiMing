@@ -45,7 +45,7 @@ class Teachers(restful.Resource):
             user.setPassword(None)
             session.add(user)
             session.commit()
-            response['data'] = str(user.uid)
+            response['data'] = user.uid
             return response
         else:
             response['code'] = 400
