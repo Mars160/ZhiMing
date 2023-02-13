@@ -7,6 +7,7 @@
       :close-on-press-escape="false"
       :show-close="false"
       title="登录"
+      width="320px"
   >
     <el-row :gutter="20">
       <span class="inline-flex w-20 items-center">用户名:</span>
