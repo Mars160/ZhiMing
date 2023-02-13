@@ -18,11 +18,17 @@
 | password  | -   | -    | √   | -      | 已测试 |
 | teachers  | √   | √    | √   | √      | 已测试 |
 | books     | √   | √    | √   | √      | 已测试 |
-| questions |     |      |     |        |     |
+| questions | ⚪   | √    | √   | √      | 未测试 |
 | classes   |     |      |     |        |     |
-| students  |     |      |     |        |     |
-| points    |     |      |     |        |     |
+| students  | ⚪   | √    | √   | √      | 未测试 |
+| points    | √   | √    | √   | √      | 未测试 |
 | homework  |     |      | -   | -      |     |
+
+*注：*
+
+*questions的GET方法的order和orderby参数尚未实现*
+
+*students的GET方法返回值中的rate和points尚未实现*
 
 ## 前端编写情况
 
