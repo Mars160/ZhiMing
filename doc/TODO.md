@@ -17,7 +17,7 @@
 | token     | √   | -    | -   | -      | 已测试 |
 | password  | -   | -    | √   | -      | 已测试 |
 | teachers  | √   | √    | √   | √      | 已测试 |
-| books     | √   | √    | √   | √      | 未测试 |
+| books     | √   | √    | √   | √      | 已测试 |
 | questions |     |      |     |        |     |
 | classes   |     |      |     |        |     |
 | students  |     |      |     |        |     |

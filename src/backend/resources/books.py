@@ -16,7 +16,10 @@ class Books(restful.Resource):
         books = session.query(Book).limit(limit).offset((page - 1) * limit).all()
         response['data'] = {}
         for i in books:
-            response['data'][i.id] = i.to_dict()
+            response['data'][i.bid] = {
+                'bname': i.bname,
+                'grade': i.grade
+            }
         return response
 
     @jwt_required()
@@ -30,7 +33,7 @@ class Books(restful.Resource):
 
         data = request.get_json()
         book = Book()
-        book.name = data['bname']
+        book.bname = data['bname']
         book.grade = data['grade']
         session.add(book)
         session.commit()
@@ -48,7 +51,7 @@ class Books(restful.Resource):
 
         data = request.get_json()
         book = session.query(Book).filter(Book.bid == bid).first()
-        book.name = data['bname']
+        book.bname = data['bname']
         book.grade = data['grade']
         session.commit()
         return response
