@@ -65,7 +65,17 @@ class Books(restful.Resource):
             response['msg'] = 'permission denied'
             return response
 
-        book = session.query(Book).filter(Book.bid == bid).first()
-        session.delete(book)
+        # 在RQB中查找是否有关联
+        rqbs = session.query(RQB).filter(RQB.bid == bid)
+        rqb_a = rqbs.all()
+        q_list = [rqb.qid for rqb in rqb_a]
+
+        # 删除Question表中，qid在q_list中的记录
+        session.query(Question).filter(Question.qid.in_(q_list)).delete(synchronize_session=False)
+        # 删除RQB表中，bid为bid的记录
+        rqbs.delete(synchronize_session=False)
+        # 删除Book表中，bid为bid的记录
+        session.query(Book).filter(Book.bid == bid).delete(synchronize_session=False)
+
         session.commit()
         return response
