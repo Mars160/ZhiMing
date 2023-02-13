@@ -3,7 +3,7 @@ from flask_jwt_extended import create_access_token
 
 
 class Token(restful.Resource):
-    def get(self):
+    def post(self):
         response = response_base.copy()
 
         data = request.get_json()
@@ -17,7 +17,8 @@ class Token(restful.Resource):
             return response
         else:
             if user.checkPassword(pwd):
-                response['data'] = create_access_token(identity=name, expires_delta=False)
+                response['data'] = create_access_token(
+                    identity=name, expires_delta=False)
                 return response
             else:
                 response['code'] = 403
