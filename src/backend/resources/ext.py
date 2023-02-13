@@ -12,7 +12,7 @@ response_base = {
 
 
 def check_permission(uid: int, role: list):
-    user = session.query(User).filter(User.id == uid).first()
+    user = session.query(User).filter(User.uid == uid).first()
     if user.role not in role:
         return False
     return True
