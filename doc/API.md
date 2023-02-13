@@ -57,12 +57,12 @@ Authorization: Bear eyJ0eXasd123kgGTS891516DGrqoifjrjgo...
 
 ### books
 
-| 方法     | 含义        | URL参数      | 请求体                             | data类型    | data内容           | 备注                                                 |
-| ------ | --------- | ---------- | ------------------------------- | --------- | ---------------- | -------------------------------------------------- |
-| GET    | 获取当前有的练习册 | limit,page |                                 | Object    | `{bid:bname...}` | limit指每页数量，page指当前是第几页，bid指当前练习册的ID，bname指每本练习册的名字 |
-| POST   | 新增练习册     |            | `{'bname':'xxx','grade':grade}` | string    | bid              | 返回新增练习册的ID,grade为练习册适用年级                           |
-| PUT    | 修改练习册名字   | /bid       | `{'bname':'yyy','grade':grade}` | undefined |                  | 返                                                  |
-| DELETE | 删除练习册     | /bid       |                                 | undefined |                  |                                                    |
+| 方法     | 含义        | URL参数      | 请求体                             | data类型    | data内容                                   | 备注                                                 |
+| ------ | --------- | ---------- | ------------------------------- | --------- | ---------------------------------------- | -------------------------------------------------- |
+| GET    | 获取当前有的练习册 | limit,page |                                 | Object    | `{bid:{'bname':bname,'grade':grade}...}` | limit指每页数量，page指当前是第几页，bid指当前练习册的ID，bname指每本练习册的名字 |
+| POST   | 新增练习册     |            | `{'bname':'xxx','grade':grade}` | string    | bid                                      | 返回新增练习册的ID,grade为练习册适用年级                           |
+| PUT    | 修改练习册名字   | /bid       | `{'bname':'yyy','grade':grade}` | undefined |                                          | 返                                                  |
+| DELETE | 删除练习册     | /bid       |                                 | undefined |                                          |                                                    |
 
 ### questions
 
