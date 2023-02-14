@@ -1,11 +1,18 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import AdminIndex from "@/views/admin/Admin-Index.vue";
+import HelloWorld from "@/components/HelloWorld.vue";
 
 const routes = [
   {
     path: '/admin',
     name: 'admin',
-    component: AdminIndex
+    component: AdminIndex,
+    children: [
+      {
+        path: 'hello',
+        component: HelloWorld,
+      },
+    ],
   },
   {
     path: '/about',
