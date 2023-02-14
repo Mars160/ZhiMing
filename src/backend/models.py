@@ -10,9 +10,7 @@ class User(Base):
     __tablename__ = 'User'
     uid = Column(Integer, primary_key=True, autoincrement=True, comment='用户id')
     uname = Column(VARCHAR(20), nullable=False, comment='用户名')
-    role = Column(Enum(
-        '管理员', '教师', '学生'
-    ), nullable=False, comment='用户角色')
+    role = Column(VARCHAR(10), nullable=False, comment='用户角色')
     pwd = Column(TEXT, nullable=False, comment='用户密码')
 
 
