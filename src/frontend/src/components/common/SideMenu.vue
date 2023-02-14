@@ -3,6 +3,7 @@
     <el-menu
         v-if="show_menu"
         style="height: 100vh"
+        router
     >
       <slot/>
     </el-menu>
