@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import axios from "axios";
+import locale from 'element-plus/lib/locale/lang/zh-cn'
 
 axios.interceptors.request.use(
     config => {
@@ -13,4 +14,7 @@ axios.interceptors.request.use(
     }
 )
 
-createApp(App).use(router).mount('#app')
+const app = createApp(App)
+app.use(router).mount('#app')
+//设置默认语言
+app.config.globalProperties.$ELEMENT = { locale }
