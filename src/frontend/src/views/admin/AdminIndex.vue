@@ -1,7 +1,7 @@
 <template>
   <Login :show="show"></Login>
   <SideMenu>
-    <el-sub-menu index="1">
+    <el-sub-menu>
       <template #title>
         <el-icon>
           <location/>
@@ -10,7 +10,7 @@
       </template>
       <el-menu-item-group>
         <template #title><span>Group One</span></template>
-        <el-menu-item index="1-1">item one</el-menu-item>
+        <el-menu-item index="hello">item one</el-menu-item>
         <el-menu-item index="1-2">item two</el-menu-item>
       </el-menu-item-group>
       <el-menu-item-group title="Group Two">
