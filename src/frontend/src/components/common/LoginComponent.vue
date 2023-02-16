@@ -10,11 +10,11 @@
       width="320px"
   >
     <el-row :gutter="20">
-      <span class="inline-flex w-20 items-center">用户名:</span>
+      <span class="inline-flex w-20 items-center">用户ID:</span>
       <el-input
           class="w-80"
           v-model="user"
-          placeholder="请输入用户名"
+          placeholder="请输入用户ID"
       />
     </el-row>
     <el-row :gutter="20" class="mt-10">
