@@ -21,10 +21,14 @@ const loginCallback = () => {
       show.value = false
       if (role === '管理员') {
         //router push
+        //如果当前url含有admin，不跳转
+        if(window.location.href.includes('admin')) return
         window.location.href = '#/admin/'
       } else if(role === '教师') {
+        if (window.location.href.includes('teacher')) return
         window.location.href = '#/teacher/'
       } else if(role === '学生') {
+        if (window.location.href.includes('student')) return
         window.location.href = '#/student/'
       }
     }
