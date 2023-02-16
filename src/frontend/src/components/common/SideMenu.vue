@@ -2,8 +2,12 @@
   <el-container>
     <el-menu
         v-if="show_menu"
-        style="height: 100vh"
+        style="height: 100vh;width:200px;"
         router
+        background-color="#001529"
+        text-color="hsla(0, 0%, 100%, .65)"
+        active-text-color="#fff"
+        class = "el-menu-vertical"
     >
       <slot/>
     </el-menu>
@@ -30,13 +34,16 @@
         <el-menu
             router
             style="height: 100vh"
+            background-color="#001529"
+            text-color="hsla(0, 0%, 100%, .65)"
+            active-text-color="#fff"
         >
           <slot/>
         </el-menu>
       </el-drawer>
     </div>
 
-    <div class="m-15">
+    <div class="m-15 fill">
       <router-view/>
     </div>
   </el-container>
@@ -70,5 +77,23 @@ if (window.innerWidth < window.innerHeight) {
 
 el-menu {
   border-right: none;
+}
+
+.el-menu-item.is-active {
+  background-color: #1890ff !important;
+}
+
+.el-menu-vertical {
+  width: 200px;
+  height: 100%;
+}
+
+ul {
+  border-right-width: 0;
+}
+
+.fill {
+  width: 100%;
+  height: 100%;
 }
 </style>
