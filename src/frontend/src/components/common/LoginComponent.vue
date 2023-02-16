@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-      v-model="show_login_dialog"
+      :v-model="props.show"
       center
       align-center
       :close-on-click-modal="false"
@@ -41,15 +41,36 @@
 <script setup>
 import {defineProps, ref} from 'vue'
 import axios from "axios";
+import 'element-plus/es/components/message/style/css'
+import {ElMessage} from "element-plus";
 
 const props = defineProps({
   show: {
     type: Boolean,
     default: true
+  },
+  loginCallback: {
+    type: Function,
+    default: (res_obj) => {
+      ElMessage({
+        message: res_obj.msg,
+        type: 'success'
+      })
+    }
+  },
+  failCallback: {
+    type: Function,
+    default: (err_str) => {
+      ElMessage({
+        message: err_str,
+        type: 'error',
+        showClose: true,
+      })
+    }
   }
 })
 
-const show_login_dialog = ref(props.show)
+// const show_login_dialog = ref(props.show)
 
 const user = ref('')
 const pwd = ref('')
@@ -66,13 +87,12 @@ function login() {
     if (result.code === 0){
       localStorage.setItem('token', result.data)
       //刷新页面
-      window.location.reload()
+      props.loginCallback(result)
     } else {
-      alert(result.msg)
+      props.failCallback(result.msg)
     }
   }).catch((err) => {
-    console.log(err)
-    alert("登录失败")
+    props.failCallback(err)
   })
 }
 </script>

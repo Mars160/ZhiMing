@@ -1,5 +1,4 @@
 <template>
-  <Login :show="show"></Login>
   <SideMenu>
     <el-sub-menu>
       <template #title>
@@ -43,13 +42,7 @@
 </template>
 
 <script setup>
-import Login from "@/components/common/LoginComponent.vue";
 import SideMenu from "@/components/common/SideMenu.vue";
-
-let show = true
-if ('token' in localStorage) {
-  show = false
-}
 </script>
 
 <style scoped>
