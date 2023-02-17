@@ -14,7 +14,7 @@ class Teachers(restful.Resource):
         # 获取url中的参数
         limit = request.args.get('limit', 10, type=int)
         page = request.args.get('page', 1, type=int)
-        teachers = session.query(User).filter(User.role == '教师').limit(limit).offset((page - 1) * limit).all()
+        teachers = db.session.query(User).filter(User.role == '教师').limit(limit).offset((page - 1) * limit).all()
         response['data'] = {}
         for teacher in teachers:
             response['data'][teacher.uid] = teacher.uname
@@ -36,15 +36,15 @@ class Teachers(restful.Resource):
             uid = None
         uname = data['tname']
 
-        user = session.query(User).filter(User.uid == uid).first()
+        user = db.session.query(User).filter(User.uid == uid).first()
         if user is None:
             user = User()
             user.uid = uid
             user.uname = uname
             user.role = '教师'
             user.setPassword(None)
-            session.add(user)
-            session.commit()
+            db.session.add(user)
+            db.session.commit()
             response['data'] = user.uid
             return response
         else:
@@ -64,7 +64,7 @@ class Teachers(restful.Resource):
         data = request.get_json()
         uname = data['tname']
 
-        user = session.query(User).filter(User.uid == tid).first()
+        user = db.session.query(User).filter(User.uid == tid).first()
         if user is None:
             response['code'] = 404
             response['msg'] = 'user not found'
@@ -73,8 +73,8 @@ class Teachers(restful.Resource):
             user.uname = uname
             if 'pwd' in data:
                 user.setPassword(data['pwd'])
-            session.add(user)
-            session.commit()
+            db.session.add(user)
+            db.session.commit()
             return response
 
     @jwt_required()
@@ -86,12 +86,12 @@ class Teachers(restful.Resource):
             response['msg'] = 'permission denied'
             return response
 
-        user = session.query(User).filter(User.uid == tid).first()
+        user = db.session.query(User).filter(User.uid == tid).first()
         if user is None:
             response['code'] = 404
             response['msg'] = 'user not found'
             return response
         else:
-            session.delete(user)
-            session.commit()
+            db.session.delete(user)
+            db.session.commit()
             return response

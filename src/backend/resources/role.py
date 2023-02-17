@@ -8,6 +8,6 @@ class Role(restful.Resource):
 
         cur_uid = get_jwt_identity()
 
-        user = session.query(User).filter(User.uid == cur_uid).first()
+        user = db.session.query(User).filter(User.uid == cur_uid).first()
         response['data'] = user.role
         return response

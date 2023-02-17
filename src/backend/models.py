@@ -1,12 +1,17 @@
 # Orm models
-from sqlalchemy import Column, Integer, VARCHAR, TEXT, ForeignKey, Enum
 from json import dumps
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from ext import Base, session
+from ext import db
+
+Column = db.Column
+Integer = db.Integer
+VARCHAR = db.VARCHAR
+TEXT = db.TEXT
+ForeignKey = db.ForeignKey
 
 
-class User(Base):
+class User(db.Model):
     __tablename__ = 'User'
     uid = Column(Integer, primary_key=True, autoincrement=True, comment='用户id')
     uname = Column(VARCHAR(20), nullable=False, comment='用户名')
@@ -18,7 +23,7 @@ class User(Base):
     @staticmethod
     def getRoleByUid(uid):
         if uid not in User.__cache:
-            user = session.query(User).filter(User.uid == uid).first()
+            user = db.session.query(User).filter(User.uid == uid).first()
             User.__cache[uid] = user.role
         return User.__cache[uid]
 
@@ -42,7 +47,7 @@ class User(Base):
         return check_password_hash(self.pwd, pwd)
 
 
-class Book(Base):
+class Book(db.Model):
     __tablename__ = 'Book'
     bid = Column(Integer, primary_key=True, autoincrement=True, comment='练习册id')
     bname = Column(VARCHAR(500), nullable=False, comment='练习册名称', unique=True)
@@ -56,7 +61,7 @@ class Book(Base):
         })
 
 
-class Question(Base):
+class Question(db.Model):
     __tablename__ = 'Question'
     qid = Column(Integer, primary_key=True, autoincrement=True, comment='题目id')
     qname = Column(TEXT, nullable=False, comment='题干')
@@ -70,7 +75,7 @@ class Question(Base):
         })
 
 
-class Class(Base):
+class Class(db.Model):
     __tablename__ = 'Class'
     cid = Column(Integer, primary_key=True, autoincrement=True, comment='班级id')
     cname = Column(VARCHAR(50), nullable=False, comment='班级名称', unique=True)
@@ -84,7 +89,7 @@ class Class(Base):
         })
 
 
-class Point(Base):
+class Point(db.Model):
     __tablename__ = 'Point'
     pid = Column(Integer, primary_key=True, autoincrement=True, comment='知识点id')
     pname = Column(VARCHAR(500), nullable=False, comment='知识点名称')
@@ -96,7 +101,7 @@ class Point(Base):
         })
 
 
-class RUC(Base):
+class RUC(db.Model):
     __tablename__ = 'RUC'
     ucid = Column(Integer, primary_key=True, autoincrement=True, comment='关系id')
     uid = Column(Integer, ForeignKey('User.uid'), nullable=False, comment='用户id')
@@ -110,7 +115,7 @@ class RUC(Base):
         })
 
 
-class RQB(Base):
+class RQB(db.Model):
     __tablename__ = 'RQB'
     qbid = Column(Integer, primary_key=True, autoincrement=True, comment='关系id')
     qid = Column(Integer, ForeignKey('Question.qid'), nullable=False, comment='题目id')
@@ -128,7 +133,7 @@ class RQB(Base):
         })
 
 
-class RPQ(Base):
+class RPQ(db.Model):
     __tablename__ = 'RPQ'
     pqid = Column(Integer, primary_key=True, autoincrement=True, comment='关系id')
     pid = Column(Integer, ForeignKey('Point.pid'), nullable=False, comment='知识点id')

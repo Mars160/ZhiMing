@@ -10,13 +10,13 @@ class Password(restful.Resource):
         pwd = data['pwd']
         uid = get_jwt_identity()
 
-        user = session.query(User).filter(User.uid == uid).first()
+        user = db.session.query(User).filter(User.uid == uid).first()
         if user is None:
             response['code'] = 1
             response['msg'] = 'user not found'
             return response
         else:
             user.setPassword(pwd)
-            session.add(user)
-            session.commit()
+            db.session.add(user)
+            db.session.commit()
             return response

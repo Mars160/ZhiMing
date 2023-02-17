@@ -13,7 +13,7 @@ class Books(restful.Resource):
 
         limit = request.args.get('limit', 10, type=int)
         page = request.args.get('page', 1, type=int)
-        books = session.query(Book).limit(limit).offset((page - 1) * limit).all()
+        books = db.session.query(Book).limit(limit).offset((page - 1) * limit).all()
         response['data'] = {}
         for i in books:
             response['data'][i.bid] = {
@@ -35,8 +35,8 @@ class Books(restful.Resource):
         book = Book()
         book.bname = data['bname']
         book.grade = data['grade']
-        session.add(book)
-        session.commit()
+        db.session.add(book)
+        db.session.commit()
         response['data'] = str(book.bid)
         return response
 
@@ -50,10 +50,10 @@ class Books(restful.Resource):
             return response
 
         data = request.get_json()
-        book = session.query(Book).filter(Book.bid == bid).first()
+        book = db.session.query(Book).filter(Book.bid == bid).first()
         book.bname = data['bname']
         book.grade = data['grade']
-        session.commit()
+        db.session.commit()
         return response
 
     @jwt_required()
@@ -66,16 +66,16 @@ class Books(restful.Resource):
             return response
 
         # 在RQB中查找是否有关联
-        rqbs = session.query(RQB).filter(RQB.bid == bid)
+        rqbs = db.session.query(RQB).filter(RQB.bid == bid)
         rqb_a = rqbs.all()
         q_list = [rqb.qid for rqb in rqb_a]
 
         # 删除Question表中，qid在q_list中的记录
-        session.query(Question).filter(Question.qid.in_(q_list)).delete(synchronize_session=False)
+        db.session.query(Question).filter(Question.qid.in_(q_list)).delete(synchronize_session=False)
         # 删除RQB表中，bid为bid的记录
         rqbs.delete(synchronize_session=False)
         # 删除Book表中，bid为bid的记录
-        session.query(Book).filter(Book.bid == bid).delete(synchronize_session=False)
+        db.session.query(Book).filter(Book.bid == bid).delete(synchronize_session=False)
 
-        session.commit()
+        db.session.commit()
         return response

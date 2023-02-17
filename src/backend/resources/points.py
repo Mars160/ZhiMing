@@ -15,7 +15,7 @@ class Points(restful.Resource):
         limit = request.args.get('limit', 10, type=int)
         page = request.args.get('page', 1, type=int)
 
-        points = session.query(Point).limit(limit).offset((page - 1) * limit).all()
+        points = db.session.query(Point).limit(limit).offset((page - 1) * limit).all()
         response['data'] = {}
         for point in points:
             response['data'][point.pid] = point.pname
@@ -35,8 +35,8 @@ class Points(restful.Resource):
         pname = data['pname']
 
         point = Point(pname=pname)
-        session.add(point)
-        session.commit()
+        db.session.add(point)
+        db.session.commit()
         response['data'] = point.pid
         return response
 
@@ -53,14 +53,14 @@ class Points(restful.Resource):
         data = request.get_json()
         pname = data['pname']
 
-        point = session.query(Point).filter(Point.pid == pid).first()
+        point = db.session.query(Point).filter(Point.pid == pid).first()
         if point is None:
             response['code'] = 404
             response['msg'] = 'point not found'
             return response
         else:
             point.pname = pname
-            session.commit()
+            db.session.commit()
             return response
 
     @jwt_required()
@@ -73,16 +73,16 @@ class Points(restful.Resource):
             response['msg'] = 'permission denied'
             return response
 
-        point = session.query(Point).filter(Point.pid == pid).first()
+        point = db.session.query(Point).filter(Point.pid == pid).first()
         if point is None:
             response['code'] = 404
             response['msg'] = 'point not found'
             return response
 
         # 在RPQ表中删除该知识点
-        session.query(RPQ).filter(RPQ.pid == pid).delete()
-        session.delete(point)
-        session.commit()
+        db.session.query(RPQ).filter(RPQ.pid == pid).delete()
+        db.session.delete(point)
+        db.session.commit()
         return response
 
 

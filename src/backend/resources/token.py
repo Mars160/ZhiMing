@@ -10,7 +10,7 @@ class Token(restful.Resource):
         name = data['user']
         pwd = data['pwd']
 
-        user = session.query(User).filter(User.uid == name).first()
+        user = db.session.query(User).filter(User.uid == name).first()
         if user is None:
             response['code'] = 404
             response['msg'] = 'user not found'
