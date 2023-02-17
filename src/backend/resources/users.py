@@ -120,7 +120,7 @@ class Users(restful.Resource):
             return response
 
     @jwt_required()
-    def delete(self, uid: int):
+    def delete(self, uid: int = None):
         response = response_base.copy()
         cur_uid = get_jwt_identity()
 
@@ -128,11 +128,24 @@ class Users(restful.Resource):
         role = user.role
 
         if role == '管理员':
+            if uid is None:
+                data = request.get_json()
+                uids = data['uids']
+                session.query(User).filter(User.uid.in_(uids)).delete(synchronize_session=False)
+                session.commit()
+                return response
             user = session.query(User).filter(User.uid == uid).first()
             session.delete(user)
             session.commit()
             return response
         elif role == '教师':
+            if uid is None:
+                data = request.get_json()
+                uids = data['uids']
+                # 删除uid在uids中 且 role为学生的用户
+                session.query(User).filter(User.uid.in_(uids), User.role == '学生').delete(synchronize_session=False)
+                session.commit()
+                return response
             user = session.query(User).filter(User.uid == uid).first()
             if user.role == '学生':
                 session.delete(user)
