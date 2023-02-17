@@ -46,7 +46,15 @@ Authorization: Bear eyJ0eXasd123kgGTS891516DGrqoifjrjgo...
 | --- | --------- | ----- | --- | ------ | ------ | --------------- |
 | GET | 获取当前用户的角色 |       |     | string | 角色字符串  | “学生”、“教师”、“管理员” |
 
+### users
 
+| 方法     | 含义         | URL参数      | 请求体                                     | data类型   | data内容                                    | 备注  |
+| ------ | ---------- | ---------- | --------------------------------------- | -------- | ----------------------------------------- | --- |
+| GET    | 获取可管理的所有用户 | limit,page |                                         | Object   | `[{'uid':uid,'uname':uname,'role':role}]` |     |
+| POST   | 新增用户       |            | `{'uid':uid,'uname':uname,'role':role}` | String   | 新增User的id                                 |     |
+| PUT    | 修改用户       | /uid       | `{'uname':uname,'pwd':pwd}`             | undefine |                                           |     |
+| DELETE | 删除用户       | /uid       |                                         | undefine |                                           |     |
+| DELETE | 批量删除用户     |            | `{'uids':[uid...]}`                     | undefine |                                           |     |
 
 ---
 
