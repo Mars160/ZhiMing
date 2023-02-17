@@ -1,6 +1,6 @@
 <template>
   <SideMenu>
-    <el-menu-item index="user-manage">
+    <el-menu-item index="/admin/user-manage">
       <el-icon>
         <i-ep-user/>
       </el-icon>
@@ -14,7 +14,5 @@ import SideMenu from "@/components/common/SideMenu.vue";
 </script>
 
 <style scoped>
-.el-menu-item{
-  justify-content: center;
-}
+
 </style>

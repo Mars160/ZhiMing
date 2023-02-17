@@ -8,6 +8,7 @@
         text-color="hsla(0, 0%, 100%, .65)"
         active-text-color="#fff"
         class = "el-menu-vertical"
+        :default-active="path"
     >
       <slot/>
     </el-menu>
@@ -52,6 +53,10 @@
 
 <script setup>
 import {ref} from "vue";
+import {useRoute} from "vue-router";
+
+const route = useRoute()
+const path = route.path
 
 const show_drawer = ref(false)
 let show_menu = true
@@ -63,7 +68,7 @@ if (window.innerWidth < window.innerHeight) {
 
 </script>
 
-<style scoped>
+<style>
 .m-15 {
   margin: 15px;
 }
@@ -81,6 +86,10 @@ el-menu {
 
 .el-menu-item.is-active {
   background-color: #1890ff !important;
+}
+
+.el-menu-item{
+  justify-content: center;
 }
 
 .el-menu-vertical {
