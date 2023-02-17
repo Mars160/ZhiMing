@@ -40,7 +40,10 @@ class User(db.Model):
 
     def setPassword(self, pwd):
         if pwd is None:
-            pwd = 'ZhiMing10130'
+            str_id = str(self.uid)
+            if len(str_id) < 6:
+                str_id = '0' * (6 - len(str_id)) + str_id
+            pwd = 'ZhiMing' + str_id
         self.pwd = generate_password_hash(pwd)
 
     def checkPassword(self, pwd):
