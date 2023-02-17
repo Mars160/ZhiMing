@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-      :v-model="true"
+      v-model="show"
       center
       align-center
       :close-on-click-modal="false"
@@ -39,16 +39,14 @@
 </template>
 
 <script setup>
-import {defineProps, ref} from 'vue'
+import {defineProps, inject, ref} from 'vue'
 import axios from "axios";
 import 'element-plus/es/components/message/style/css'
 import {ElMessage} from "element-plus";
 
+const show = inject('show-login')
+
 const props = defineProps({
-  show: {
-    type: Boolean,
-    default: true
-  },
   loginCallback: {
     type: Function,
     default: (res_obj) => {

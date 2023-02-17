@@ -51,21 +51,13 @@
 </template>
 
 <script setup>
-import {defineProps, inject, ref} from 'vue'
+import {defineProps, inject} from 'vue'
 import axios from "axios";
 import {ElMessage} from "element-plus";
 
-const uid = ref('')
-const uname = ref("")
-
-const selectuid = inject("select-uid")
-const selectuname = inject("select-uname")
-if (selectuid !== undefined) {
-  uid.value = selectuid
-}
-if (selectuname !== undefined) {
-  uname.value = selectuname
-}
+const uid = inject("select-uid")
+const uname = inject("select-uname")
+const show = inject("showAddUserDialog")
 
 const props = defineProps({
   confirmCallback: {
@@ -79,6 +71,10 @@ const props = defineProps({
           const data = res.data
           if (data.code === 0) {
             ElMessage.success(data.msg)
+            //1s后刷新页面
+            setTimeout(() => {
+              window.location.reload()
+            }, 1000)
           } else {
             ElMessage.error(data.msg)
           }
@@ -86,12 +82,15 @@ const props = defineProps({
           ElMessage.error(err)
         })
       } else if (type === "edit") {
-        axios.put('/v1/users/' + uid.toString(), {
+        axios.put('/v1/users/' + uid, {
           uname: uname
         }).then((res) => {
           const data = res.data
           if (data.code === 0) {
             ElMessage.success(data.msg)
+            setTimeout(() => {
+              window.location.reload()
+            }, 1000)
           } else {
             ElMessage.error(data.msg)
           }
@@ -123,7 +122,7 @@ const props = defineProps({
 })
 
 function onClose() {
-  uid.value = undefined
+  uid.value = ''
   uname.value = ""
 }
 
@@ -138,8 +137,6 @@ function cancelClicked() {
 function resetPwdClicked() {
   props.resetPwdCallback(uid.value, uname.value, props.type)
 }
-
-const show = inject("showAddUserDialog")
 </script>
 
 <style scoped>
