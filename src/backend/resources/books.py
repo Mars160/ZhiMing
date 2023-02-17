@@ -15,11 +15,7 @@ class Books(restful.Resource):
         page = request.args.get('page', 1, type=int)
         books = db.session.query(Book).limit(limit).offset((page - 1) * limit).all()
         response['data'] = {}
-        for i in books:
-            response['data'][i.bid] = {
-                'bname': i.bname,
-                'grade': i.grade
-            }
+        response['data'] = [{"bid": i.bid, "bname": i.bname, "grade": i.grade} for i in books]
         return response
 
     @jwt_required()
