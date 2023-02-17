@@ -67,9 +67,8 @@ function loadMoreUser() {
     })
     if (result.length !== 0) {
       PAGE = PAGE + 1
-      if (result.length < LIMIT) {
-        loadDisable.value = true
-      }
+    } else {
+      loadDisable.value = true
     }
   }).catch((err) => {
     ElMessage.error(err)
