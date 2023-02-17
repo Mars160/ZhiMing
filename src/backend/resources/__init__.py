@@ -7,6 +7,7 @@ from .books import Books
 from .questions import Questions
 from .points import Points
 from .role import Role
+from .users import Users
 
 api = restful.Api()
 
@@ -17,3 +18,4 @@ api.add_resource(Books, '/v1/books/<int:bid>', '/v1/books')
 api.add_resource(Questions, '/v1/questions/<int:qid>', '/v1/questions')
 api.add_resource(Points, '/v1/points/<int:pid>', '/v1/points')
 api.add_resource(Role, '/v1/role')
+api.add_resource(Users, '/v1/users/<int:uid>', '/v1/users')
