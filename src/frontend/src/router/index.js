@@ -4,6 +4,7 @@ import AdminTeacherIndex from "@/components/common/AdminTeacherIndex.vue";
 import NotFound from "@/components/common/NotFound.vue";
 import UserManage from "@/views/common/UserManage.vue";
 import TeacherLayout from "@/views/teacher/TeacherLayout.vue";
+import BookManage from "@/views/teacher/BookManage.vue";
 
 const routes = [
   {
@@ -33,6 +34,10 @@ const routes = [
       {
         path: 'user-manage',
         component: UserManage,
+      },
+      {
+            path: 'book-manage',
+            component: BookManage,
       }
     ],
   },

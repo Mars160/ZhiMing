@@ -10,7 +10,11 @@
     </li>
   </ul>
   <el-card>
-    <span>一课一练数学三年级（下）</span>
+    <el-button type="plain" @click="addClicked" circle size="large">
+      <el-icon>
+        <i-ep-plus/>
+      </el-icon>
+    </el-button>
   </el-card>
 </template>
 
@@ -32,7 +36,16 @@ function loadMoreBook() {
       limit: LIMIT
     }
   }).then((res) => {
+    const bidSet = new Set()
+    books.value.forEach((user) => {
+      bidSet.add(user.uid)
+    })
     const result = res.data.data
+    result.forEach((user) => {
+      if (!bidSet.has(user.uid)) {
+        books.value.push(user)
+      }
+    })
     if (result.length !== 0) {
       PAGE = PAGE + 1
     } else {
