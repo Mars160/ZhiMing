@@ -3,7 +3,7 @@ from sqlalchemy import Column, Integer, VARCHAR, TEXT, ForeignKey, Enum
 from json import dumps
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from ext import Base
+from ext import Base, session
 
 
 class User(Base):
@@ -12,6 +12,16 @@ class User(Base):
     uname = Column(VARCHAR(20), nullable=False, comment='用户名')
     role = Column(VARCHAR(10), nullable=False, comment='用户角色')
     pwd = Column(TEXT, nullable=False, comment='用户密码')
+
+    __cache = {}
+
+    @staticmethod
+    def getRoleByUid(uid):
+        if uid not in User.__cache:
+            user = session.query(User).filter(User.uid == uid).first()
+            User.__cache[uid] = user.role
+        return User.__cache[uid]
+
 
 
     def __repr__(self):
