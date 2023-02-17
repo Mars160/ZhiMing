@@ -11,6 +11,16 @@
         :default-active="path"
     >
       <slot/>
+      <el-button
+          class = "el-menu-item"
+          color="#001529"
+        @click="logout"
+      >
+        <el-icon>
+          <i-ep-circle-close/>
+        </el-icon>
+        <span>登出</span>
+      </el-button>
     </el-menu>
     <div v-else>
       <el-button
@@ -66,6 +76,11 @@ if (window.innerWidth < window.innerHeight) {
   show_menu = false
 }
 
+function logout() {
+  localStorage.removeItem('token')
+  window.location.reload()
+}
+
 </script>
 
 <style>
@@ -90,6 +105,7 @@ el-menu {
 
 .el-menu-item{
   justify-content: center;
+  width: 100%;
 }
 
 .el-menu-vertical {

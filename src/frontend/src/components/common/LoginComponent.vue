@@ -54,6 +54,9 @@ const props = defineProps({
         message: res_obj.msg,
         type: 'success'
       })
+      setTimeout(() => {
+        window.location.reload()
+      }, 1000)
     }
   },
   failCallback: {
@@ -84,8 +87,7 @@ function login() {
     const result = res.data
     if (result.code === 0){
       localStorage.setItem('token', result.data)
-      //刷新页面
-      props.loginCallback(result)
+      window.location.reload()
     } else {
       props.failCallback(result.msg)
     }

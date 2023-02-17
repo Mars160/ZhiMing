@@ -109,10 +109,24 @@ const props = defineProps({
   },
   resetPwdCallback: {
     type: Function,
-    default: () => {
-      //TODO
-      this.show = false
-      console.log("resetPwd")
+    // eslint-disable-next-line no-unused-vars
+    default: (uid) => {
+      axios.put('/v1/users/' + uid,
+          {
+            pwd: null
+          }).then((res) => {
+        const data = res.data
+        if (data.code === 0) {
+          ElMessage.success(data.msg)
+          setTimeout(() => {
+            window.location.reload()
+          }, 1000)
+        } else {
+          ElMessage.error(data.msg)
+        }
+      }).catch((err) => {
+        ElMessage.error(err)
+      })
     }
   },
   type: {

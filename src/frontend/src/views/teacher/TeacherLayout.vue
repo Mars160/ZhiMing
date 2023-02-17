@@ -1,6 +1,6 @@
 <template>
   <SideMenu>
-    <el-menu-item index="/admin/user-manage">
+    <el-menu-item index="/teacher/user-manage">
       <el-icon>
         <i-ep-user/>
       </el-icon>

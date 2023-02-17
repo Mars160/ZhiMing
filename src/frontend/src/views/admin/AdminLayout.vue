@@ -4,7 +4,7 @@
       <el-icon>
         <i-ep-user/>
       </el-icon>
-      <span>用户管理</span>
+      <span>教师管理</span>
     </el-menu-item>
   </SideMenu>
 </template>
