@@ -1,8 +1,8 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import AdminLayout from "@/views/AdminLayout.vue";
+import AdminLayout from "@/views/admin/AdminLayout.vue";
 import AdminTeacherIndex from "@/components/common/AdminTeacherIndex.vue";
 import NotFound from "@/components/common/NotFound.vue";
-import TeacherManagement from "@/views/admin/TeacherManagement.vue";
+import UserManage from "@/views/common/UserManage.vue";
 
 const routes = [
   {
@@ -15,8 +15,8 @@ const routes = [
         alias: ['']
       },
       {
-        path: 'teacher-management',
-        component: TeacherManagement,
+        path: 'user-manage',
+        component: UserManage,
       }
     ],
   },

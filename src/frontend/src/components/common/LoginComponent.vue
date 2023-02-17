@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-      :v-model="props.show"
+      :v-model="true"
       center
       align-center
       :close-on-click-modal="false"

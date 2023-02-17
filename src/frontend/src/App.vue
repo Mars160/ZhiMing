@@ -1,6 +1,6 @@
 <template>
   <LoginComponent
-      :show="show"
+      v-if="show"
       :login-callback="loginCallback"
   />
     <router-view/>

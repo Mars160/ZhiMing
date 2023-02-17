@@ -1,10 +1,10 @@
 <template>
   <SideMenu>
-    <el-menu-item index="teacher-management">
+    <el-menu-item index="user-manage">
       <el-icon>
         <i-ep-user/>
       </el-icon>
-      <span>教师管理</span>
+      <span>用户管理</span>
     </el-menu-item>
   </SideMenu>
 </template>
