@@ -35,11 +35,22 @@ const loginCallback = () => {
       }
     }
   }).catch((err) => {
-    ElMessage({
-      message: err,
-      type: 'error',
-      showClose: true,
-    })
+    //获取返回body
+    const body = err.response.data
+    if(body.msg === 'Missing Authorization Header') {
+      ElMessage({
+        message: '请先登录',
+        type: 'error',
+        showClose: true,
+      })
+      return
+    } else {
+      ElMessage({
+        message: err,
+        type: 'error',
+        showClose: true,
+      })
+    }
     localStorage.removeItem('token')
     //2s后刷新
     setTimeout(() => {
