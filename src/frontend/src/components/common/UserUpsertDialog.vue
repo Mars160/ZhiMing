@@ -62,7 +62,7 @@ const show = inject("showAddUserDialog")
 const props = defineProps({
   confirmCallback: {
     type: Function,
-    default: (uid, uname, type) => {
+    default: (uid, uname, type, show) => {
       if(type === "add") {
         axios.post('/v1/users', {
           uid: uid,
@@ -98,13 +98,13 @@ const props = defineProps({
           ElMessage.error(err)
         })
       }
-      this.show = false
+      show.value = false
     }
   },
   cancelCallback: {
     type: Function,
-    default: () => {
-      this.show = false
+    default: (show) => {
+      show.value = false
     }
   },
   resetPwdCallback: {
@@ -141,11 +141,11 @@ function onClose() {
 }
 
 function confirmClicked() {
-  props.confirmCallback(uid.value, uname.value, props.type)
+  props.confirmCallback(uid.value, uname.value, props.type, show)
 }
 
 function cancelClicked() {
-  props.cancelCallback(uid.value, uname.value, props.type)
+  props.cancelCallback(show)
 }
 
 function resetPwdClicked() {

@@ -84,9 +84,6 @@ function editClicked() {
   }
   uid.value = userrow.uid
   uname.value = userrow.uname
-
-  console.log(userrow.uid);
-
   showAddUserDialog.value = true
   dialogType.value = "edit"
 }
@@ -96,7 +93,6 @@ function addClicked() {
   dialogType.value = "add"
   uid.value = ''
   uname.value = ''
-  console.log(showAddUserDialog);
 }
 
 function deleteClicked() {
