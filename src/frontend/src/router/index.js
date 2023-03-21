@@ -5,6 +5,7 @@ import NotFound from "@/components/common/NotFound.vue";
 import UserManage from "@/views/common/UserManage.vue";
 import TeacherLayout from "@/views/teacher/TeacherLayout.vue";
 import BookManage from "@/views/teacher/BookManage.vue";
+import QuestionManage from "@/views/teacher/QuestionManage.vue";
 
 const routes = [
   {
@@ -38,6 +39,10 @@ const routes = [
       {
             path: 'book-manage',
             component: BookManage,
+      },
+      {
+            path: 'question-manage',
+            component: QuestionManage,
       }
     ],
   },

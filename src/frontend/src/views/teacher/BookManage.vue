@@ -6,11 +6,12 @@
     <li
         v-for="book in books"
         :key="book.bid"
-        @click="editBook(book.bid, book.bname, book.grade)"
     >
       <el-card>
         <span class="book-info">{{ book.bname }}</span>
         <span class="book-info">{{ book.gradeStr }}</span>
+        <el-button type="primary" @click="editBook(book.bid, book.bname, book.grade)">编辑</el-button>
+        <el-button type="danger" @click="deleteBook(book.bid)">删除</el-button>
       </el-card>
     </li>
     <li>
@@ -112,7 +113,6 @@ function editBook(bid1, bname1, grade1) {
   justify-content: center;
   align-items: center;
   display: flex;
-
   cursor: pointer;
 }
 
@@ -124,6 +124,8 @@ ul {
   list-style: none;
   padding: 0;
   margin: 0;
+
+  display: flex;
 }
 
 li {

@@ -39,7 +39,7 @@
         确认
       </el-button>
       <el-button
-          type="danger"
+          type="info"
           class="mt-20"
           @click="cancelClicked"
       >

@@ -12,6 +12,12 @@
       </el-icon>
       <span>练习册管理</span>
     </el-menu-item>
+    <el-menu-item index="/teacher/question-manage">
+      <el-icon>
+        <i-ep-QuestionFilled />
+      </el-icon>
+      <span>题目管理</span>
+    </el-menu-item>
   </SideMenu>
 </template>
 

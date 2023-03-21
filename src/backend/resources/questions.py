@@ -18,26 +18,54 @@ class Questions(restful.Resource):
             page = request.args.get('page', 1, type=int)
             orderby = request.args.get('orderby', 'qid', type=str)
             order = request.args.get('order', 'asc', type=str)
+            bid = request.args.get('bid', None, type=int)
+            if bid is None:
+                response['code'] = 400
+                response['msg'] = 'parameter bid is required'
+                return response
 
-            # questions = db.session.query(Question).order_by(
-            #     getattr(
-            #         getattr(Question, orderby),                        order)()
-            # ).limit(limit).offset((page - 1) * limit).all()
-            questions = db.session.query(Question).limit(limit).offset((page - 1) * limit).subquery()
-            p_q = db.session.query(questions, RPQ).join(RPQ, RPQ.qid == questions.c.qid).subquery()
-            p_q_name = db.session.query(p_q, Point).join(Point, Point.pid == p_q.c.pid).all()
-            response['data'] = {}
-            for question in p_q_name:
-                qid = question[0].qid
-                if qid not in response['data']:
-                    response['data'][qid] = {
-                        'qname': question[0].qname,
-                        'level': question[0].level,
-                        'points': []
+            b_q = db.session.query(RQB).filter(RQB.bid == bid).subquery()
+            # 从RPQ中获取pid
+            b_q_p = db.session.query(b_q, RPQ).join(RPQ, RPQ.qid == b_q.c.qid).subquery()
+
+            b_qname_p = db.session.query(b_q_p, Question).join(Question, Question.qid == b_q_p.c.qid).subquery()
+            b_qname_pname = db.session.query(b_qname_p, Point).join(Point, Point.pid == b_qname_p.c.pid).all()
+
+            response['data'] = []
+            # for question in b_qname_pname:
+            #     qid = question[0].qid
+            #     if qid not in response['data']:
+            #         response['data'][qid] = {
+            #             'qname': question[0].qname,
+            #             'level': question[0].level,
+            #             'points': []
+            #         }
+            #     response['data'][qid]['points'].append(
+            #         {question[1].pid: question[2].pname}
+            #     )
+            question_dict = {}
+            for row in b_qname_pname:
+                qid = row.qid
+                if qid not in question_dict:
+                    question_dict[qid] = {
+                        'qname': row.qname,
+                        'level': row.level,
+                        'points': [row.pname],
+                        'page': row.page,
+                        'place': row.place
                     }
-                response['data'][qid]['points'].append(
-                    {question[1].pid: question[2].pname}
-                )
+                else:
+                    question_dict[qid]['points'].append(row.pname)
+            for qid in question_dict:
+                item = {
+                    'qid': qid,
+                    'qname': question_dict[qid]['qname'],
+                    'level': question_dict[qid]['level'],
+                    'points': question_dict[qid]['points'],
+                    'page': question_dict[qid]['page'],
+                    'place': question_dict[qid]['place']
+                }
+                response['data'].append(item)
         return response
 
     @jwt_required()
