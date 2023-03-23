@@ -38,7 +38,7 @@
       <el-drawer
           v-model="show_drawer"
           direction="ltr"
-          size="100%"
+          size="101%"
           :with-header="false"
           :show-close="false"
       >
@@ -48,8 +48,21 @@
             background-color="#001529"
             text-color="hsla(0, 0%, 100%, .65)"
             active-text-color="#fff"
+            class="el-menu-drawer"
+            :default-active="path"
+            @select="close_menu"
         >
           <slot/>
+          <el-button
+              class = "el-menu-item"
+              color="#001529"
+              @click="logout"
+          >
+            <el-icon>
+              <i-ep-circle-close/>
+            </el-icon>
+            <span>登出</span>
+          </el-button>
         </el-menu>
       </el-drawer>
     </div>
@@ -79,6 +92,10 @@ if (window.innerWidth < window.innerHeight) {
 function logout() {
   localStorage.removeItem('token')
   window.location.reload()
+}
+
+function close_menu() {
+  show_drawer.value = false
 }
 
 </script>
@@ -113,6 +130,11 @@ el-menu {
   height: 100%;
 }
 
+.el-menu-drawer {
+  width: 100%;
+  height: 100%;
+}
+
 ul {
   border-right-width: 0;
 }
@@ -120,5 +142,9 @@ ul {
 .fill {
   width: 100%;
   height: 100%;
+}
+
+.el-drawer__body {
+  padding: 0;
 }
 </style>

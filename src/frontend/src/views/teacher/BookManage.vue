@@ -126,6 +126,8 @@ ul {
   margin: 0;
 
   display: flex;
+
+  flex-wrap: wrap;
 }
 
 li {

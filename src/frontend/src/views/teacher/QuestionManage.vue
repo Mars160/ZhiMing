@@ -19,6 +19,12 @@
             >
               添加题目
             </el-button>
+            <el-button
+              type="danger"
+              @click="deleteSelectedQuestions"
+            >
+              删除所选
+            </el-button>
           </el-col>
         </el-row>
       </template>
@@ -28,7 +34,8 @@
       border
       :data="fakeQuestions"
      >
-      <el-table-column label="题目ID" prop="qid" width="70"/>
+       <el-table-column type="selection"/>
+      <el-table-column label="题目ID" prop="qid" width="100" sortable/>
       <el-table-column label="题干" prop="qname"/>
        <el-table-column label="知识点">
          <template #default="scope">
@@ -44,17 +51,25 @@
             </el-tag>
          </template>
        </el-table-column>
-      <el-table-column label="页码" prop="page" width="70"/>
-      <el-table-column label="位置" prop="place" width="70"/>
+      <el-table-column label="页码" prop="page" width="90" default-sort sortable/>
+      <el-table-column label="位置" prop="place" width="90" sortable/>
+       <el-table-column label="编辑" prop="place" width="70">
+         <template #default="scope">
+           <el-button size="small" type="success" @click="editQuestion(scope.$index, scope.row)">编辑</el-button>
+         </template>
+       </el-table-column>
      </el-table>
     </el-collapse-item>
   </el-collapse>
+
+  <QuestionUpsertDialog :type="dialogType"/>
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import {ref, provide} from 'vue';
 import axios from "axios";
 import {ElMessage} from "element-plus";
+import QuestionUpsertDialog from "@/components/teacher/QuestionUpsertDialog.vue";
 
 let global_counter = -1
 
@@ -78,6 +93,24 @@ const fakeQuestions = ref([{
   "place":1
 }
 ])
+
+const select_qid = ref('')
+const select_qname = ref('')
+const select_qpoints = ref([])
+const select_qpage = ref('')
+const select_qplace = ref('')
+const select_bid = ref('')
+const showDialog = ref(false)
+
+const dialogType = ref('add')
+
+provide('select-qid', select_qid)
+provide('select-qname', select_qname)
+provide('select-qpoints', select_qpoints)
+provide('select-qpage', select_qpage)
+provide('select-qplace', select_qplace)
+provide('select-bid', select_bid)
+provide('showQuestionUpsertDialog', showDialog)
 
 for(let index =3;index <= 100; index++) {
   fakeQuestions.value.push({
@@ -146,7 +179,9 @@ function randomTagColor() {
 }
 
 function addNewQuestion(bid) {
-  console.log(bid)
+  select_bid.value = bid
+  dialogType.value = 'add'
+  showDialog.value = true
 }
 
 </script>
