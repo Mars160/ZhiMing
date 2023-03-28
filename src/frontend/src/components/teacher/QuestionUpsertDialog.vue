@@ -108,6 +108,7 @@ function confirmClicked() {
     }).then(() => {
       ElMessage.success("修改成功");
       show.value = false;
+      window.location.reload();
     }).catch(err => {
       ElMessage.error("修改失败", err);
     })
@@ -121,6 +122,7 @@ function confirmClicked() {
     }).then(() => {
       ElMessage.success("修改成功");
       show.value = false;
+      window.location.reload();
     }).catch(err => {
       ElMessage.error("修改失败", err);
     })

@@ -21,19 +21,13 @@
             >
               添加题目
             </el-button>
-            <el-button
-              type="danger"
-              @click="deleteSelectedQuestions"
-            >
-              删除所选
-            </el-button>
           </el-col>
         </el-row>
       </template>
      <el-table
       style="width: 100%"
-      height="500"
       border
+      height="500"
       :data="questions[book.bid]"
      >
        <el-table-column type="selection"/>
@@ -55,9 +49,10 @@
        </el-table-column>
       <el-table-column label="页码" prop="page" width="90" default-sort sortable/>
       <el-table-column label="位置" prop="place" width="90" sortable/>
-       <el-table-column label="编辑" prop="place" width="70">
+       <el-table-column label="编辑" prop="place" width="150">
          <template #default="scope">
-           <el-button size="small" type="success" @click="editQuestion(scope.$index, scope.row)">编辑</el-button>
+           <el-button size="small" type="success" @click="editQuestion(scope.row)">编辑</el-button>
+           <el-button size="small" type="danger" @click="deleteQuestion(scope.row.qid)">删除</el-button>
          </template>
        </el-table-column>
      </el-table>
@@ -73,31 +68,16 @@ import axios from "axios";
 import {ElMessage} from "element-plus";
 import QuestionUpsertDialog from "@/components/teacher/QuestionUpsertDialog.vue";
 
+sessionStorage.setItem('question_manage_last_bid', -1)
+
 let global_counter = -1
-const LIMIT = 10
+const LIMIT = 1000
 
 const pages = {};
 const questions = reactive({});
 const bookName = ref('');
 const books = ref([]);
-const fakeQuestions = reactive([{
-  "qid":1,
-  "qname":"小熊九月份每天坚持跑 12 千米，这个月他共跑多少千米？列式正确的是",
-  "point":["大数计算", "十以内加减"],
-  "rightnum":80,
-  "totalnum":100,
-  "page":10,
-  "place":1
-},{
-  "qid":2,
-  "qname":"小熊九月份每天坚持跑 12 千米，这个月他共跑多少千米？列式正确的是",
-  "point":["大数计算", "十以内加减", "P3"],
-  "rightnum":80,
-  "totalnum":100,
-  "page":10,
-  "place":1
-}
-])
+const loadDisable = reactive({});
 
 const select_qid = ref('')
 const select_qname = ref('')
@@ -117,16 +97,15 @@ provide('select-qplace', select_qplace)
 provide('select-bid', select_bid)
 provide('showQuestionUpsertDialog', showDialog)
 
-for(let index =3;index <= 100; index++) {
-  fakeQuestions.push({
-    "qid":index,
-    "qname":"小熊九月份每天坚持跑 12 千米，这个月他共跑多少千米？列式正确的是",
-    "point":["大数计算", "十以内加减", "P3"],
-    "rightnum":80,
-    "totalnum":100,
-    "page":10,
-    "place":1
-  })
+function editQuestion(question) {
+  select_qid.value = question.qid
+  select_qname.value = question.qname
+  select_qpoints.value = question.points
+  select_qpage.value = question.page
+  select_qplace.value = question.place
+  select_bid.value = question.bid
+  dialogType.value = 'edit'
+  showDialog.value = true
 }
 
 axios.get('/v1/books',
@@ -140,6 +119,7 @@ axios.get('/v1/books',
     for (const book of books.value) {
       pages[book.bid] = 1
       questions[book.bid] = ref([])
+      loadDisable[book.bid] = true
     }
   } else {
     ElMessage({
@@ -193,9 +173,15 @@ function addNewQuestion(bid) {
 
 function getQuestions(bid) {
   let page = pages[bid]
+  const last_bid = sessionStorage.getItem('question_manage_last_bid')
   if(bid === '' || page === -1) {
+    loadDisable[last_bid] = true
     return
+  } else if(bid !== bookName.value){
+    loadDisable[last_bid] = true
+    loadDisable[bid] = false
   }
+  sessionStorage.setItem('question_manage_last_bid', bid)
   axios.get('/v1/questions', {
     params : {
       page: page,
@@ -217,7 +203,32 @@ function getQuestions(bid) {
     })
   })
 }
-
+function deleteQuestion(qid) {
+  axios.delete('/v1/questions/' + qid).then(res => {
+    if(res.data.code === 0) {
+      ElMessage({
+        message: '删除成功',
+        type: 'success',
+        showClose: true,
+      })
+      for (const book of books.value) {
+        questions[book.bid] = questions[book.bid].filter(q => q.qid !== qid)
+      }
+    } else {
+      ElMessage({
+        message: res.data.msg,
+        type: 'error',
+        showClose: true,
+      })
+    }
+  }).catch(err => {
+    ElMessage({
+      message: err,
+      type: 'error',
+      showClose: true,
+    })
+  })
+}
 </script>
 
 <style scoped>

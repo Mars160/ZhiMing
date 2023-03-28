@@ -2,6 +2,7 @@ from .ext import *
 
 
 class Questions(restful.Resource):
+    UPDATE_TIME = 100
     @jwt_required()
     def get(self):
         response = response_base.copy()
@@ -34,7 +35,9 @@ class Questions(restful.Resource):
             ).filter(
                 RQB.bid == bid,
                 RQB.qid == Question.qid,
-            ).limit(limit).offset((page - 1) * limit).subquery()
+            )
+            pages = ques.count() // limit + 1
+            ques = ques.limit(limit).offset((page - 1) * limit).subquery()
 
             query = db.session.query(
                 ques.c.bid,
@@ -52,6 +55,7 @@ class Questions(restful.Resource):
             ).all()
 
             response['data'] = []
+            response['pages'] = pages
 
             question_dict = {}
             for row in query:
@@ -96,6 +100,13 @@ class Questions(restful.Resource):
             page = data['page']
             place = data['place']
 
+            #查看bid是否存在
+            book = db.session.query(Book).filter(Book.bid == bid).first()
+            if book is None:
+                response['code'] = 404
+                response['msg'] = 'book not found'
+                return response
+
             question = Question()
             question.qname = qname
             question.level = 0
@@ -111,28 +122,7 @@ class Questions(restful.Resource):
             rqb.place = place
             db.session.add(rqb)
 
-            # point为pname列表，使用in从数据库筛选出pid列表，若不存在则添加到point表中
-            exist_ps = db.session.query(Point.pid, Point.pname).filter(Point.pname.in_(point)).all()
-            exist_pids = []
-            exist_pnames = []
-            for i in exist_ps:
-                exist_pids.append(i[0])
-                exist_pnames.append(i[1])
-
-            # 不存在的pname
-            new_pnames = list(set(point) - set(exist_pnames))
-            for i in new_pnames:
-                p = Point()
-                p.pname = i
-                db.session.add(p)
-                db.session.commit()
-                exist_pids.append(p.pid)
-
-            for i in exist_pids:
-                rpq = RPQ()
-                rpq.qid = question.qid
-                rpq.pid = i
-                db.session.add(rpq)
+            self.add_not_exist_point(point, question.qid)
 
             db.session.commit()
 
@@ -151,7 +141,6 @@ class Questions(restful.Resource):
         else:
             data = request.get_json()
 
-            bid = data['bid']
             qname = data['qname']
             point = data['point']
             page = data['page']
@@ -162,24 +151,17 @@ class Questions(restful.Resource):
                 response['code'] = 404
                 response['msg'] = 'question not found'
                 return response
-            o_bid = q.bid  # 原bid
-            q.bid = bid
             q.qname = qname
-
-            # 在RQB表中修改记录
-            rqb = db.session.query(RQB).filter(RQB.qid == qid, RQB.bid == o_bid).first()
-            rqb.bid = bid
-            rqb.qid = qid
-            rqb.page = page
-            rqb.place = place
 
             # 在RPQ表中修改记录
             db.session.query(RPQ).filter(RPQ.qid == qid).delete()
-            for i in point:
-                rpq = RPQ()
-                rpq.qid = qid
-                rpq.pid = i
-                db.session.add(rpq)
+            # 在RQB表中修改记录
+            db.session.query(RQB).filter(RQB.qid == qid).update({
+                "page": page,
+                "place": place
+            })
+
+            self.add_not_exist_point(point, qid)
 
             db.session.commit()
             return response
@@ -203,13 +185,34 @@ class Questions(restful.Resource):
         db.session.commit()
         return response
 
+    def add_not_exist_point(self, point, qid):
+        # point为pname列表，使用in从数据库筛选出pid列表，若不存在则添加到point表中
+        exist_ps = db.session.query(Point.pid, Point.pname).filter(Point.pname.in_(point)).all()
+        exist_pids = []
+        exist_pnames = []
+        for i in exist_ps:
+            exist_pids.append(i[0])
+            exist_pnames.append(i[1])
 
+        # 不存在的pname
+        new_pnames = list(set(point) - set(exist_pnames))
+        for i in new_pnames:
+            p = Point()
+            p.pname = i
+            db.session.add(p)
+            db.session.commit()
+            exist_pids.append(p.pid)
 
+        for i in exist_pids:
+            rpq = RPQ()
+            rpq.qid = qid
+            rpq.pid = i
+            db.session.add(rpq)
 
+        self.UPDATE_TIME -= 1
 
-
-
-
-
-
-
+        if self.UPDATE_TIME == 0:
+            self.UPDATE_TIME = 100
+            exist_pids = db.session.query(RPQ.pid).all()
+            # 清除不在RPQ表中的point
+            db.session.query(Point).filter(~Point.pid.in_(exist_pids)).delete()

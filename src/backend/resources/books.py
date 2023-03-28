@@ -1,3 +1,5 @@
+from sqlalchemy import func
+
 from .ext import *
 
 
@@ -13,9 +15,24 @@ class Books(restful.Resource):
 
         limit = request.args.get('limit', 10, type=int)
         page = request.args.get('page', 1, type=int)
-        books = db.session.query(Book).limit(limit).offset((page - 1) * limit).all()
+        books = db.session.query(Book).limit(limit).offset((page - 1) * limit)
+
+        book_a = books.all()
         response['data'] = {}
-        response['data'] = [{"bid": i.bid, "bname": i.bname, "grade": i.grade} for i in books]
+        response['data'] = [{"bid": i.bid, "bname": i.bname, "grade": i.grade, 'qcount': 0} for i in book_a]
+
+        books = books.subquery()
+        re = db.session.query(
+            books.c.bid,
+            func.count(RQB.qid).label('count'),
+        ).filter(books.c.bid == RQB.bid).group_by(RQB.bid).all()
+        # 根据bid更新response中的qcount
+        bid2count = {}
+        for i in re:
+            bid2count[str(i.bid)] = i.count
+        for i in response['data']:
+            i['qcount'] = bid2count[str(i['bid'])] if str(i['bid']) in bid2count else 0
+
         return response
 
     @jwt_required()
