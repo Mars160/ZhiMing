@@ -24,27 +24,44 @@ class Questions(restful.Resource):
                 response['msg'] = 'parameter bid is required'
                 return response
 
-            b_q = db.session.query(RQB).filter(RQB.bid == bid).subquery()
-            # 从RPQ中获取pid
-            b_q_p = db.session.query(b_q, RPQ).join(RPQ, RPQ.qid == b_q.c.qid).subquery()
+            ques = db.session.query(
+                RQB.bid,
+                RQB.page,
+                RQB.place,
+                Question.qid,
+                Question.qname,
+                Question.level,
+            ).filter(
+                RQB.bid == bid,
+                RQB.qid == Question.qid,
+            ).limit(limit).offset((page - 1) * limit).subquery()
 
-            b_qname_p = db.session.query(b_q_p, Question).join(Question, Question.qid == b_q_p.c.qid).subquery()
-            b_qname_pname = db.session.query(b_qname_p, Point).join(Point, Point.pid == b_qname_p.c.pid).all()
+            query = db.session.query(
+                ques.c.bid,
+                ques.c.page,
+                ques.c.place,
+                ques.c.qid,
+                ques.c.qname,
+                ques.c.level,
+                RPQ.pid,
+                Point.pname,
+                RPQ.pqid,
+            ).filter(
+                RPQ.qid == ques.c.qid,
+                RPQ.pid == Point.pid,
+            ).all()
+
+            # b_q = db.session.query(RQB).filter(RQB.bid == bid).subquery()
+            # # 从RPQ中获取pid
+            # b_q_p = db.session.query(b_q, RPQ).join(RPQ, RPQ.qid == b_q.c.qid).subquery()
+            #
+            # b_qname_p = db.session.query(b_q_p, Question).join(Question, Question.qid == b_q_p.c.qid).subquery()
+            # b_qname_pname = db.session.query(b_qname_p, Point).join(Point, Point.pid == b_qname_p.c.pid).all()
 
             response['data'] = []
-            # for question in b_qname_pname:
-            #     qid = question[0].qid
-            #     if qid not in response['data']:
-            #         response['data'][qid] = {
-            #             'qname': question[0].qname,
-            #             'level': question[0].level,
-            #             'points': []
-            #         }
-            #     response['data'][qid]['points'].append(
-            #         {question[1].pid: question[2].pname}
-            #     )
+
             question_dict = {}
-            for row in b_qname_pname:
+            for row in query:
                 qid = row.qid
                 if qid not in question_dict:
                     question_dict[qid] = {
@@ -88,9 +105,10 @@ class Questions(restful.Resource):
 
             question = Question()
             question.qname = qname
-            question.level = ''
+            question.level = 0
 
             db.session.add(question)
+            db.session.flush()
 
             # 在RQB表中添加记录
             rqb = RQB()
@@ -100,8 +118,24 @@ class Questions(restful.Resource):
             rqb.place = place
             db.session.add(rqb)
 
-            # 在RPQ表中添加记录
-            for i in point:
+            # point为pname列表，使用in从数据库筛选出pid列表，若不存在则添加到point表中
+            exist_ps = db.session.query(Point.pid, Point.pname).filter(Point.pname.in_(point)).all()
+            exist_pids = []
+            exist_pnames = []
+            for i in exist_ps:
+                exist_pids.append(i[0])
+                exist_pnames.append(i[1])
+
+            # 不存在的pname
+            new_pnames = list(set(point) - set(exist_pnames))
+            for i in new_pnames:
+                p = Point()
+                p.pname = i
+                db.session.add(p)
+                db.session.commit()
+                exist_pids.append(p.pid)
+
+            for i in exist_pids:
                 rpq = RPQ()
                 rpq.qid = question.qid
                 rpq.pid = i

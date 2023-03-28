@@ -78,6 +78,7 @@
 <script setup>
 import {defineProps, inject, ref, nextTick} from 'vue'
 import axios from "axios";
+import {ElMessage} from "element-plus";
 
 const show = inject("showQuestionUpsertDialog");
 const qid = inject("select-qid");
@@ -104,10 +105,11 @@ function confirmClicked() {
       point: qpoints.value,
       page: qpage.value,
       place: qplace.value
-    }).then(res => {
-      console.log(res);
+    }).then(() => {
+      ElMessage.success("修改成功");
+      show.value = false;
     }).catch(err => {
-      console.log(err);
+      ElMessage.error("修改失败", err);
     })
   } else if (props.type === "add") {
     axios.post("/v1/questions", {
@@ -116,15 +118,14 @@ function confirmClicked() {
       page: qpage.value,
       place: qplace.value,
       bid: bid.value
-    }).then(res => {
-      console.log(res);
+    }).then(() => {
+      ElMessage.success("修改成功");
+      show.value = false;
     }).catch(err => {
-      console.log(err);
+      ElMessage.error("修改失败", err);
     })
   }
 }
-
-
 
 function handleClose(tag) {
   qpoints.value.splice(qpoints.value.indexOf(tag), 1);

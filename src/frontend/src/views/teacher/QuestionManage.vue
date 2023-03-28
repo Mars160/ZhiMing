@@ -2,10 +2,12 @@
   <el-collapse
     v-model="bookName"
     accordion
+    @change="getQuestions"
   >
     <el-collapse-item
       v-for="book in books"
       :key="book.bid"
+      :name="book.bid"
     >
       <template #title>
         <el-row style="width: 100%">
@@ -32,7 +34,7 @@
       style="width: 100%"
       height="500"
       border
-      :data="fakeQuestions"
+      :data="questions[book.bid]"
      >
        <el-table-column type="selection"/>
       <el-table-column label="题目ID" prop="qid" width="100" sortable/>
@@ -40,7 +42,7 @@
        <el-table-column label="知识点">
          <template #default="scope">
             <el-tag
-              v-for="point in scope.row.point"
+              v-for="point in scope.row.points"
               :key="point"
               :closable="false"
               :disable-transitions="false"
@@ -66,16 +68,19 @@
 </template>
 
 <script setup>
-import {ref, provide} from 'vue';
+import {ref, provide, reactive} from 'vue';
 import axios from "axios";
 import {ElMessage} from "element-plus";
 import QuestionUpsertDialog from "@/components/teacher/QuestionUpsertDialog.vue";
 
 let global_counter = -1
+const LIMIT = 10
 
+const pages = {};
+const questions = reactive({});
 const bookName = ref('');
 const books = ref([]);
-const fakeQuestions = ref([{
+const fakeQuestions = reactive([{
   "qid":1,
   "qname":"小熊九月份每天坚持跑 12 千米，这个月他共跑多少千米？列式正确的是",
   "point":["大数计算", "十以内加减"],
@@ -113,7 +118,7 @@ provide('select-bid', select_bid)
 provide('showQuestionUpsertDialog', showDialog)
 
 for(let index =3;index <= 100; index++) {
-  fakeQuestions.value.push({
+  fakeQuestions.push({
     "qid":index,
     "qname":"小熊九月份每天坚持跑 12 千米，这个月他共跑多少千米？列式正确的是",
     "point":["大数计算", "十以内加减", "P3"],
@@ -124,8 +129,6 @@ for(let index =3;index <= 100; index++) {
   })
 }
 
-//fakeQuestions End
-
 axios.get('/v1/books',
     {params: {
         page: 1,
@@ -134,6 +137,10 @@ axios.get('/v1/books',
 ).then((res) => {
   if (res.data.code === 0) {
     books.value = res.data.data
+    for (const book of books.value) {
+      pages[book.bid] = 1
+      questions[book.bid] = ref([])
+    }
   } else {
     ElMessage({
       message: res.data.msg,
@@ -182,6 +189,33 @@ function addNewQuestion(bid) {
   select_bid.value = bid
   dialogType.value = 'add'
   showDialog.value = true
+}
+
+function getQuestions(bid) {
+  let page = pages[bid]
+  if(bid === '' || page === -1) {
+    return
+  }
+  axios.get('/v1/questions', {
+    params : {
+      page: page,
+      limit: LIMIT,
+      bid: bid,
+    }
+  }).then(res => {
+    const ques = res.data.data
+    questions[bid] = questions[bid].concat(ques)
+    pages[bid] += 1
+    if(ques.length < LIMIT) {
+      pages[bid] = -1
+    }
+  }).catch(err => {
+    ElMessage({
+      message: err,
+      type: 'error',
+      showClose: true,
+    })
+  })
 }
 
 </script>
