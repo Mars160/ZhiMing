@@ -51,13 +51,6 @@ class Questions(restful.Resource):
                 RPQ.pid == Point.pid,
             ).all()
 
-            # b_q = db.session.query(RQB).filter(RQB.bid == bid).subquery()
-            # # 从RPQ中获取pid
-            # b_q_p = db.session.query(b_q, RPQ).join(RPQ, RPQ.qid == b_q.c.qid).subquery()
-            #
-            # b_qname_p = db.session.query(b_q_p, Question).join(Question, Question.qid == b_q_p.c.qid).subquery()
-            # b_qname_pname = db.session.query(b_qname_p, Point).join(Point, Point.pid == b_qname_p.c.pid).all()
-
             response['data'] = []
 
             question_dict = {}
