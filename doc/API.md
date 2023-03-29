@@ -91,12 +91,12 @@ Authorization: Bear eyJ0eXasd123kgGTS891516DGrqoifjrjgo...
 
 ### classes
 
-| 方法     | 含义          | URL参数       | 请求体                             | data类型    | data内容                                            | 备注                  |
-| ------ | ----------- | ----------- | ------------------------------- | --------- | ------------------------------------------------- | ------------------- |
-| GET    | 获取当前教师的所有班级 | limit,page  |                                 | Object    | `{cid:{'cname':cname,'number':人数,'grade':grade}}` | cid为班级id            |
-| POST   | 新建班级        | cname,grade | File                            | string    | cid                                               | 上传包含学生学号、姓名的excel文件 |
-| PUT    | 修改班级        | /cid        | `{'cname':cname,'grade':grade}` | undefined |                                                   |                     |
-| DELETE | 删除班级        | /cid        |                                 | undefined |                                                   |                     |
+| 方法     | 含义          | URL参数 | 请求体                                                              | data类型    | data内容                                                                                                                     | 备注                  |
+| ------ | ----------- | ----- | ---------------------------------------------------------------- | --------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| GET    | 获取当前教师的所有班级 |       |                                                                  | Object    | `[{'cid':cid,'cname':cname,'grade':grade,'teachers':[{'tid':tid,'tname':tname}],'students':[{'sid':sid, 'sname':sname}]}]` | cid为班级id            |
+| POST   | 新建班级        |       | `{'cname': cname, 'grade': grade, 'tids': [tid], 'sids': [sid]}` | string    | cid                                                                                                                        | 上传包含学生学号、姓名的excel文件 |
+| PUT    | 修改班级        | /cid  | `{'cname':cname,'grade':grade, 'tids': [tid], 'sids': [sid]}`    | undefined |                                                                                                                            |                     |
+| DELETE | 删除班级        | /cid  |                                                                  | undefined |                                                                                                                            |                     |
 
 ### students
 
