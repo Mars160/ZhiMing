@@ -7,6 +7,8 @@ QUESTION_EACH_BOOK = 100
 POINTS_COUNT = 30
 POINTS_MAX_EACH_QUESTION = 5
 MAX_PAGE = 30
+MAX_WRONG_COUNT_EACH_STUDENT = 10
+MIN_WRONG_COUNT_EACH_STUDENT = 1
 
 from app import app
 import click
@@ -91,7 +93,7 @@ def create_question():
     for book in books:
         for i in range(QUESTION_EACH_BOOK):
             question = Question()
-            question.qname = fake.sentence(nb_words=2, variable_nb_words=True)
+            question.qname = fake.sentence()
             question.level = 1
             db.session.add(question)
             db.session.flush()
@@ -114,8 +116,21 @@ def create_question():
     db.session.commit()
 
 
+def create_wrong():
+    students = db.session.query(User.uid).filter(User.role == '学生').all()
+    questions = db.session.query(Question.qid).all()
+    for student in students:
+        wrong_qs = choices(questions, k=randint(MIN_WRONG_COUNT_EACH_STUDENT, MAX_WRONG_COUNT_EACH_STUDENT))
+        for i in wrong_qs:
+            wrong = RUQ()
+            wrong.uid = student.uid
+            wrong.qid = i.qid
+            db.session.add(wrong)
+    db.session.commit()
+
+
 @app.cli.command('create')
-@click.argument('item', default='None')
+@click.argument('item', nargs=1)
 def create(item):
     if item == 'db':
         create_db()
@@ -144,6 +159,9 @@ def create(item):
     elif item == 'question':
         create_question()
         click.echo('题目创建成功')
+    elif item == 'wrong':
+        create_wrong()
+        click.echo('错题创建成功')
 
     elif item == 'prod':
         create_db()
@@ -164,13 +182,86 @@ def create(item):
         click.echo('知识点创建成功...')
         create_question()
         click.echo('题目创建成功...')
+        create_wrong()
+        click.echo('错题创建成功...')
         click.echo('所有数据创建成功')
     else:
-        click.echo('参数错误，可选参数：db, admin, teacher, student, book, points, question, prod, all, test')
+        click.echo('参数错误，可选参数：db, admin, teacher, student, book, points, question, wrong, prod, all, test')
 
 
-@app.cli.command('drop-db')
-def drop_db():
-    db.drop_all()
-    click.echo('数据库删除成功')
+def drop_wrong():
+    db.session.query(RUQ).delete()
+    db.session.commit()
+
+def drop_question():
+    db.session.query(RPQ).delete()
+    db.session.query(RQB).delete()
+    db.session.query(Question).delete()
+    db.session.commit()
+
+
+def drop_point():
+    db.session.query(Point).delete()
+    db.session.commit()
+
+
+def drop_book():
+    db.session.query(Book).delete()
+    db.session.commit()
+
+
+def drop_student():
+    db.session.query(User).filter(User.role == '学生').delete()
+    db.session.commit()
+
+
+def drop_teacher():
+    db.session.query(User).filter(User.role == '教师').delete()
+    db.session.commit()
+
+
+@app.cli.command('delete')
+@app.cli.command('drop')
+@click.argument('item', default='None')
+def drop_db(item):
+    if item in ['db', 'test', 'all', 'prod']:
+        ensure = click.confirm('此举会连带删除所有数据，继续？', default=False)
+        if ensure:
+            db.drop_all()
+            click.echo('数据库删除成功')
+        else:
+            click.echo('数据库删除取消')
+    elif item == 'wrong':
+        drop_wrong()
+        click.echo('错题删除成功')
+    elif item == 'question':
+        drop_question()
+        click.echo('题目删除成功')
+    elif item == 'points':
+        ensure = click.confirm('此举会连带删除所有题目，继续？', default=False)
+        if ensure:
+            drop_question()
+            click.echo('题目删除成功')
+            drop_point()
+            click.echo('知识点删除成功')
+        else:
+            click.echo('知识点删除取消')
+    elif item == 'book':
+        ensure = click.confirm('此举会连带删除所有题目和知识点，继续？', default=False)
+        if ensure:
+            drop_question()
+            click.echo('题目删除成功')
+            drop_point()
+            click.echo('知识点删除成功')
+            drop_book()
+            click.echo('教材删除成功')
+    elif item == 'student':
+        drop_student()
+        click.echo('学生账号删除成功')
+    elif item == 'teacher':
+        drop_teacher()
+        click.echo('教师账号删除成功')
+
+    else:
+        click.echo('参数错误，可选参数：db, question, points, book, student, teacher, test, all, prod')
 

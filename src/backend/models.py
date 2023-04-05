@@ -9,6 +9,7 @@ Integer = db.Integer
 VARCHAR = db.VARCHAR
 TEXT = db.TEXT
 ForeignKey = db.ForeignKey
+TIMESTAMP = db.TIMESTAMP
 
 
 class User(db.Model):
@@ -185,3 +186,32 @@ class RUQ(db.Model):
     uqid = Column(Integer, primary_key=True, autoincrement=True, comment='关系id')
     uid = Column(Integer, ForeignKey('User.uid'), nullable=False, comment='用户id')
     qid = Column(Integer, ForeignKey('Question.qid'), nullable=False, comment='题目id')
+
+
+    def __repr__(self):
+        return dumps({
+            'uqid': self.uqid,
+            'uid': self.uid,
+            'qid': self.qid
+        })
+
+
+class Homework(db.Model):
+    __tablename__ = 'Homework'
+    __table_args__ = ({
+        'comment': '平台生成的作业表'
+    })
+    hid = Column(Integer, primary_key=True, autoincrement=True, comment='作业id')
+    uid = Column(Integer, ForeignKey('User.uid'), nullable=False, comment='用户id')
+    qids = Column(TEXT, nullable=False, comment='题目id列表')
+    timestamp = Column(TIMESTAMP, nullable=False, comment='生成时间')
+
+    def __repr__(self):
+        return dumps({
+            'hid': self.hid,
+            'uid': self.uid,
+            'qids': self.qids
+        })
+
+
+

@@ -9,6 +9,7 @@ from .points import Points
 from .role import Role
 from .users import Users
 from .classes import Classes
+from .homeworks import Homeworks
 
 api = restful.Api()
 
@@ -21,3 +22,4 @@ api.add_resource(Points, '/v1/points/<int:pid>', '/v1/points')
 api.add_resource(Role, '/v1/role')
 api.add_resource(Users, '/v1/users/<int:uid>', '/v1/users')
 api.add_resource(Classes, '/v1/classes/<int:cid>', '/v1/classes')
+api.add_resource(Homeworks, '/v1/homeworks')
