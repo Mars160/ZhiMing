@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import AdminLayout from "@/views/admin/AdminLayout.vue";
-import AdminTeacherIndex from "@/components/common/AdminTeacherIndex.vue";
+import CommonIndex from "@/components/common/CommonIndex.vue";
 import NotFound from "@/components/common/NotFound.vue";
 import UserManage from "@/views/common/UserManage.vue";
 import TeacherLayout from "@/views/teacher/TeacherLayout.vue";
@@ -15,7 +15,7 @@ const routes = [
     children: [
       {
         path: 'index',
-        component: AdminTeacherIndex,
+        component: CommonIndex,
         alias: ['']
       },
       {
@@ -30,7 +30,7 @@ const routes = [
     children: [
       {
         path: 'index',
-        component: AdminTeacherIndex,
+        component: CommonIndex,
         alias: ['']
       },
       {
@@ -50,6 +50,13 @@ const routes = [
   {
     path: '/student',
     component: StudentLayout,
+    children: [
+      {
+        path: 'index',
+        component: CommonIndex,
+        alias: ['']
+      },
+    ],
   },
   {
     path: '/:pathMatch(.*)*',
