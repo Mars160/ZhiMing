@@ -48,8 +48,8 @@ class User(db.Model):
             if len(str_id) <= 6:
                 str_id = '0' * (6 - len(str_id)) + str_id
             pwd = 'ZhiMing' + str_id
-        self.pwd = pwd
-        #self.pwd = generate_password_hash(pwd)
+        #self.pwd = pwd
+        self.pwd = generate_password_hash(pwd)
 
     def checkPassword(self, pwd):
         if check_password_hash(self.pwd, pwd) or self.pwd == pwd:

@@ -21,6 +21,16 @@
         </el-icon>
         <span>登出</span>
       </el-button>
+        <el-button
+                class = "el-menu-item"
+                color="#001529"
+                @click="editPwd"
+        >
+            <el-icon>
+                <i-ep-edit/>
+            </el-icon>
+            <span>修改密码</span>
+        </el-button>
     </el-menu>
     <div v-else>
       <el-button
@@ -63,6 +73,16 @@
             </el-icon>
             <span>登出</span>
           </el-button>
+            <el-button
+                    class = "el-menu-item"
+                    color="#001529"
+                    @click="editPwd"
+            >
+                <el-icon>
+                    <i-ep-edit/>
+                </el-icon>
+                <span>修改密码</span>
+            </el-button>
         </el-menu>
       </el-drawer>
     </div>
@@ -77,6 +97,8 @@
 <script setup>
 import {ref} from "vue";
 import {useRoute} from "vue-router";
+import {ElMessageBox} from "element-plus";
+import axios from "axios";
 
 const route = useRoute()
 const path = route.path
@@ -96,6 +118,29 @@ function logout() {
 
 function close_menu() {
   show_drawer.value = false
+}
+
+function editPwd() {
+    ElMessageBox.prompt('请输入新的密码', '密码修改', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+    }).then((value) => {
+        axios.put('/v1/users/' + localStorage.getItem('uid'), {
+            pwd: value.value
+        }).then(res => {
+            if (res.data.code === 0) {
+                ElMessageBox.alert('密码修改成功', '密码修改', {
+                    confirmButtonText: '确定',
+                }).then(() => {
+                    logout()
+                })
+            } else {
+                ElMessageBox.alert('密码修改失败', '密码修改', {
+                    confirmButtonText: '确定',
+                })
+            }
+        })
+    })
 }
 
 </script>
@@ -123,6 +168,8 @@ el-menu {
 .el-menu-item{
   justify-content: center;
   width: 100%;
+
+    margin-left: 0 !important;
 }
 
 .el-menu-vertical {

@@ -10,4 +10,5 @@ class Role(restful.Resource):
 
         user = db.session.query(User).filter(User.uid == cur_uid).first()
         response['data'] = user.role
+        response['uid'] = user.uid
         return response

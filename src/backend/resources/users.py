@@ -35,7 +35,7 @@ class Users(restful.Resource):
         uid = None
         if 'uid' in data:
             uid = data['uid']
-        nickname = data['uname']
+        nickname = data['nickname']
         urole = None
         if 'role' in data:
             role = data['role']
@@ -93,6 +93,11 @@ class Users(restful.Resource):
         elif role == '教师':
             if 'nickname' in data:
                 user.nickname = data['nickname']
+            if 'pwd' in data:
+                user.setPassword(data['pwd'])
+            db.session.commit()
+            return response
+        elif cur_uid == uid:
             if 'pwd' in data:
                 user.setPassword(data['pwd'])
             db.session.commit()
