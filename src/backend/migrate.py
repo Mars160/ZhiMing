@@ -93,7 +93,7 @@ def create_question():
     for book in books:
         for i in range(QUESTION_EACH_BOOK):
             question = Question()
-            question.qname = fake.sentence()
+            question.qname = fake.paragraph(nb_sentences=5, variable_nb_sentences=True)
             question.level = 1
             db.session.add(question)
             db.session.flush()
