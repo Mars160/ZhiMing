@@ -60,8 +60,10 @@ class Users(restful.Resource):
             # user.uid = uid
             user.uname = uname
             user.role = urole
-            user.setPassword(None)
+            user.pwd = 'default-password'
             db.session.add(user)
+            db.session.flush()
+            user.setPassword(None)
             db.session.commit()
             response['data'] = user.uid
             return response

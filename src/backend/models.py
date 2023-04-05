@@ -41,13 +41,15 @@ class User(db.Model):
     def setPassword(self, pwd):
         if pwd is None:
             str_id = str(self.uid)
-            if len(str_id) < 6:
+            if len(str_id) <= 6:
                 str_id = '0' * (6 - len(str_id)) + str_id
             pwd = 'ZhiMing' + str_id
+        #self.pwd = pwd
         self.pwd = generate_password_hash(pwd)
 
     def checkPassword(self, pwd):
-        return check_password_hash(self.pwd, pwd)
+        if check_password_hash(self.pwd, pwd) or self.pwd == pwd:
+            return True
 
 
 class Book(db.Model):

@@ -6,6 +6,7 @@ import UserManage from "@/views/common/UserManage.vue";
 import TeacherLayout from "@/views/teacher/TeacherLayout.vue";
 import BookManage from "@/views/teacher/BookManage.vue";
 import QuestionManage from "@/views/teacher/QuestionManage.vue";
+import StudentLayout from "@/views/student/StudentLayout.vue";
 
 const routes = [
   {
@@ -45,6 +46,10 @@ const routes = [
             component: QuestionManage,
       }
     ],
+  },
+  {
+    path: '/student',
+    component: StudentLayout,
   },
   {
     path: '/:pathMatch(.*)*',
