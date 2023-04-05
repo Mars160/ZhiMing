@@ -17,6 +17,20 @@ class Homeworks(restful.Resource):
             response['msg'] = '？？你在干什么'
             return response
 
+        # 去Homework表中查找是否有当前用户的作业
+        homeworks = db.session.query(Homework).filter_by(uid=cur_uid).first()
+        if homeworks:
+            qids = homeworks.qids
+            qids = qids.split(',')
+            qids = [int(qid) for qid in qids]
+            questions = db.session.query(Question).filter(Question.qid.in_(qids)).all()
+            questions = {str(q.qid): q.qname for q in questions}
+            data = []
+            for qid in qids:
+                data.append(questions[str(qid)])
+            response['data'] = data
+            return response
+
         ruq = db.session.query(RUQ).filter_by(uid=cur_uid).all()
         wrong_qids = {r.qid for r in ruq}
 
@@ -73,7 +87,7 @@ class Homeworks(restful.Resource):
         hm.qids = ','.join([str(q['qid']) for q in qs])
         hm.timestamp = datetime.now()
 
-        #db.session.add(hm)
+        db.session.add(hm)
         db.session.commit()
 
         response['data'] = [q['qname'] for q in qs]
