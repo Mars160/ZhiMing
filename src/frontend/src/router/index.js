@@ -7,6 +7,7 @@ import TeacherLayout from "@/views/teacher/TeacherLayout.vue";
 import BookManage from "@/views/teacher/BookManage.vue";
 import QuestionManage from "@/views/teacher/QuestionManage.vue";
 import StudentLayout from "@/views/student/StudentLayout.vue";
+import HomeworkIndex from "@/views/student/HomeworkIndex.vue";
 
 const routes = [
   {
@@ -56,6 +57,10 @@ const routes = [
         component: CommonIndex,
         alias: ['']
       },
+        {
+            path: 'questions-download',
+            component: HomeworkIndex,
+        }
     ],
   },
   {

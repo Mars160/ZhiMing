@@ -1,6 +1,6 @@
 <template>
   <SideMenu>
-      <el-menu-item index="/student/questions-upload">
+      <el-menu-item index="/student/questions-download">
           <el-icon>
               <i-ep-edit-pen />
           </el-icon>
