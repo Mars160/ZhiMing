@@ -14,10 +14,10 @@ class Users(restful.Resource):
         role = User.getRoleByUid(cur_uid)
         if role == '管理员':
             users = db.session.query(User).filter(User.role == '教师').limit(limit).offset((page - 1) * limit).all()
-            response['data'] = [{'uid': user.uid, 'uname': user.uname, 'role': user.role} for user in users]
+            response['data'] = [{'uid': user.uid, 'uname': user.uname, 'nickname': user.nickname, 'role': user.role} for user in users]
         elif role == '教师':
             users = db.session.query(User).filter(User.role == '学生').limit(limit).offset((page - 1) * limit).all()
-            response['data'] = [{'uid': user.uid, 'uname': user.uname, 'role': user.role} for user in users]
+            response['data'] = [{'uid': user.uid, 'uname': user.uname, 'nickname': user.nickname, 'role': user.role} for user in users]
         else:
             response['code'] = 403
             response['msg'] = 'permission denied'
@@ -35,7 +35,7 @@ class Users(restful.Resource):
         uid = None
         if 'uid' in data:
             uid = data['uid']
-        uname = data['uname']
+        nickname = data['uname']
         urole = None
         if 'role' in data:
             role = data['role']
@@ -58,11 +58,13 @@ class Users(restful.Resource):
         else:
             user = User()
             # user.uid = uid
-            user.uname = uname
+            user.uname = nickname + 'LOOOONG'
+            user.nickname = nickname
             user.role = urole
-            user.pwd = 'default-password'
+            user.pwd = DEFAULT_USER_PWD
             db.session.add(user)
             db.session.flush()
+            user.uname = str(nickname) + str(user.uid)
             user.setPassword(None)
             db.session.commit()
             response['data'] = user.uid
@@ -80,8 +82,8 @@ class Users(restful.Resource):
         user = db.session.query(User).filter(User.uid == uid).first()
 
         if role == '管理员':
-            if 'uname' in data:
-                user.uname = data['uname']
+            if 'nickname' in data:
+                user.nickname = data['nickname']
             if 'role' in data:
                 user.role = data['role']
             if 'pwd' in data:
@@ -89,8 +91,8 @@ class Users(restful.Resource):
             db.session.commit()
             return response
         elif role == '教师':
-            if 'uname' in data:
-                user.uname = data['uname']
+            if 'nickname' in data:
+                user.nickname = data['nickname']
             if 'pwd' in data:
                 user.setPassword(data['pwd'])
             db.session.commit()

@@ -12,7 +12,7 @@
     >
       <el-table-column type="selection" />
       <el-table-column prop="uid" label="学/工号" />
-      <el-table-column prop="uname" label="用户姓名" />
+      <el-table-column prop="nickname" label="用户姓名" />
       <el-table-column prop="role" label="用户身份" />
     </el-table>
     <el-row style="margin-top: 15px">
@@ -42,10 +42,10 @@ const dialogType = ref("add")
 const selectedUser = ref([])
 
 const uid = ref('')
-const uname = ref('')
+const nickname = ref('')
 
 provide("select-uid", uid)
-provide("select-uname", uname)
+provide("select-nickname", nickname)
 
 function loadMoreUser() {
   axios.get('/v1/users', {
@@ -83,7 +83,7 @@ function editClicked() {
     return
   }
   uid.value = userrow.uid
-  uname.value = userrow.uname
+  nickname.value = userrow.nickname
   showAddUserDialog.value = true
   dialogType.value = "edit"
 }
@@ -92,7 +92,7 @@ function addClicked() {
   showAddUserDialog.value = true
   dialogType.value = "add"
   uid.value = ''
-  uname.value = ''
+  nickname.value = ''
 }
 
 function deleteClicked() {

@@ -1,7 +1,7 @@
 from .ext import *
 
 
-class Teachers(restful.Resource):
+class Students(restful.Resource):
     @jwt_required()
     def get(self):
         response = response_base.copy()

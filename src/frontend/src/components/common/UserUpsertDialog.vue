@@ -18,7 +18,7 @@
      <span class="inline-flex w-20 items-center">用户名:</span>
      <el-input
          class="w-80"
-         v-model="uname"
+         v-model="nickname"
          placeholder="请输入用户名"
      />
    </el-row>
@@ -55,16 +55,16 @@ import axios from "axios";
 import {ElMessage} from "element-plus";
 
 const uid = inject("select-uid")
-const uname = inject("select-uname")
+const nickname = inject("select-nickname")
 const show = inject("showAddUserDialog")
 
 const props = defineProps({
   confirmCallback: {
     type: Function,
-    default: (uid, uname, type, show) => {
+    default: (uid, nickname, type, show) => {
       if(type === "add") {
         axios.post('/v1/users', {
-          uname: uname
+          nickname: nickname
         }).then((res) => {
           const data = res.data
           if (data.code === 0) {
@@ -81,7 +81,7 @@ const props = defineProps({
         })
       } else if (type === "edit") {
         axios.put('/v1/users/' + uid, {
-          uname: uname
+          nickname: nickname
         }).then((res) => {
           const data = res.data
           if (data.code === 0) {
@@ -135,11 +135,11 @@ const props = defineProps({
 
 function onClose() {
   uid.value = ''
-  uname.value = ""
+  nickname.value = ""
 }
 
 function confirmClicked() {
-  props.confirmCallback(uid.value, uname.value, props.type, show)
+  props.confirmCallback(uid.value, nickname.value, props.type, show)
 }
 
 function cancelClicked() {
@@ -147,7 +147,7 @@ function cancelClicked() {
 }
 
 function resetPwdClicked() {
-  props.resetPwdCallback(uid.value, uname.value, props.type)
+  props.resetPwdCallback(uid.value, nickname.value, props.type)
 }
 </script>
 

@@ -13,9 +13,13 @@ ForeignKey = db.ForeignKey
 
 class User(db.Model):
     __tablename__ = 'User'
+    __table_args__ = (
+        {'comment': '用户表'}
+    )
     uid = Column(Integer, primary_key=True, autoincrement=True, comment='用户id')
-    uname = Column(VARCHAR(20), nullable=False, comment='用户名')
+    uname = Column(VARCHAR(20), nullable=False, comment='用户名', unique=True)
     role = Column(VARCHAR(10), nullable=False, comment='用户角色')
+    nickname = Column(VARCHAR(20), nullable=False, comment='用户昵称')
     pwd = Column(TEXT, nullable=False, comment='用户密码')
 
     __cache = {}
@@ -44,8 +48,8 @@ class User(db.Model):
             if len(str_id) <= 6:
                 str_id = '0' * (6 - len(str_id)) + str_id
             pwd = 'ZhiMing' + str_id
-        #self.pwd = pwd
-        self.pwd = generate_password_hash(pwd)
+        self.pwd = pwd
+        #self.pwd = generate_password_hash(pwd)
 
     def checkPassword(self, pwd):
         if check_password_hash(self.pwd, pwd) or self.pwd == pwd:
@@ -54,6 +58,9 @@ class User(db.Model):
 
 class Book(db.Model):
     __tablename__ = 'Book'
+    __table_args__ = (
+        {'comment': '练习册表'}
+    )
     bid = Column(Integer, primary_key=True, autoincrement=True, comment='练习册id')
     bname = Column(VARCHAR(500), nullable=False, comment='练习册名称', unique=True)
     grade = Column(Integer, nullable=False, comment='适用年级')
@@ -68,6 +75,9 @@ class Book(db.Model):
 
 class Question(db.Model):
     __tablename__ = 'Question'
+    __table_args__ = (
+        {'comment': '题目表'}
+    )
     qid = Column(Integer, primary_key=True, autoincrement=True, comment='题目id')
     qname = Column(TEXT, nullable=False, comment='题干')
     level = Column(Integer, nullable=False, comment='难度等级')
@@ -82,6 +92,9 @@ class Question(db.Model):
 
 class Class(db.Model):
     __tablename__ = 'Class'
+    __table_args__ = (
+        {'comment': '班级表'}
+    )
     cid = Column(Integer, primary_key=True, autoincrement=True, comment='班级id')
     cname = Column(VARCHAR(50), nullable=False, comment='班级名称', unique=True)
     grade = Column(Integer, nullable=False, comment='年级')
@@ -96,6 +109,9 @@ class Class(db.Model):
 
 class Point(db.Model):
     __tablename__ = 'Point'
+    __table_args__ = (
+        {'comment': '知识点表'}
+    )
     pid = Column(Integer, primary_key=True, autoincrement=True, comment='知识点id')
     pname = Column(VARCHAR(500), nullable=False, comment='知识点名称')
 
@@ -108,6 +124,9 @@ class Point(db.Model):
 
 class RUC(db.Model):
     __tablename__ = 'RUC'
+    __table_args__ = (
+        {'comment': '用户班级关系表'}
+    )
     ucid = Column(Integer, primary_key=True, autoincrement=True, comment='关系id')
     uid = Column(Integer, ForeignKey('User.uid'), nullable=False, comment='用户id')
     cid = Column(Integer, ForeignKey('Class.cid'), nullable=False, comment='班级id')
@@ -122,6 +141,9 @@ class RUC(db.Model):
 
 class RQB(db.Model):
     __tablename__ = 'RQB'
+    __table_args__ = (
+        {'comment': '题目练习册关系表'}
+    )
     qbid = Column(Integer, primary_key=True, autoincrement=True, comment='关系id')
     qid = Column(Integer, ForeignKey('Question.qid'), nullable=False, comment='题目id')
     bid = Column(Integer, ForeignKey('Book.bid'), nullable=False, comment='练习册id')
@@ -140,6 +162,9 @@ class RQB(db.Model):
 
 class RPQ(db.Model):
     __tablename__ = 'RPQ'
+    __table_args__ = (
+        {'comment': '知识点题目关系表'}
+    )
     pqid = Column(Integer, primary_key=True, autoincrement=True, comment='关系id')
     pid = Column(Integer, ForeignKey('Point.pid'), nullable=False, comment='知识点id')
     qid = Column(Integer, ForeignKey('Question.qid'), nullable=False, comment='题目id')
@@ -150,3 +175,13 @@ class RPQ(db.Model):
             'pid': self.pid,
             'qid': self.qid
         })
+
+
+class RUQ(db.Model):
+    __tablename__ = 'RUQ'
+    __table_args__ = ({
+        'comment': '用户错了的题目'
+    })
+    uqid = Column(Integer, primary_key=True, autoincrement=True, comment='关系id')
+    uid = Column(Integer, ForeignKey('User.uid'), nullable=False, comment='用户id')
+    qid = Column(Integer, ForeignKey('Question.qid'), nullable=False, comment='题目id')
