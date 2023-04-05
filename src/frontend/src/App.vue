@@ -20,7 +20,7 @@ const loginCallback = () => {
     const result = res.data
     if (result.code === 0) {
       const role = result.data
-
+      localStorage.setItem('uid', result.uid)
       if (role === '管理员') {
         //router push
         //如果当前url含有admin，不跳转
