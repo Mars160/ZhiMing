@@ -31,7 +31,7 @@
       :data="questions[book.bid]"
      >
        <el-table-column type="selection"/>
-      <el-table-column label="题目ID" prop="qid" width="100" sortable/>
+      <el-table-column label="题目ID" prop="qid" width="100" sortable v-if="false"/>
       <el-table-column label="题干" prop="qname"/>
        <el-table-column label="知识点">
          <template #default="scope">
