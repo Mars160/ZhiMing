@@ -1,6 +1,6 @@
 <template>
     <el-card class="middle-parent">
-        <canvas id="homework-canvas" :width="WIDTH" :height="HEIGHT" style="height: 73vh">如果您看到这条消息，说明您的浏览器并不支持canvas绘图</canvas>
+        <canvas id="homework-canvas" :width="WIDTH" :height="HEIGHT" style="height: 73vh">如果您看到这条消息，说明您的浏览器并不支持canvas绘图，请在其他设备上打开本网站。</canvas>
         <div style="padding: 14px; text-align: center">
             <p>{{ text }}</p>
             <el-row class="middle-row">
