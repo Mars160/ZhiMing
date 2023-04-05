@@ -6,13 +6,12 @@
      center
      width="320px"
  >
-   <el-row :gutter="20">
+   <el-row :gutter="20" v-if="type === 'edit'">
      <span class="inline-flex w-20 items-center">用户ID:</span>
      <el-input
          class="w-80"
          v-model="uid"
          placeholder="请输入用户ID"
-         :disabled="props.type === 'edit'"
      />
    </el-row>
    <el-row :gutter="20" class="mt-10">
@@ -65,7 +64,6 @@ const props = defineProps({
     default: (uid, uname, type, show) => {
       if(type === "add") {
         axios.post('/v1/users', {
-          uid: uid,
           uname: uname
         }).then((res) => {
           const data = res.data

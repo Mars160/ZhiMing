@@ -96,8 +96,26 @@ function addClicked() {
 }
 
 function deleteClicked() {
-  ElMessage.error("暂未实现")
-  //TODO Here
+    const uid_list = []
+    selectedUser.value.forEach((user) => {
+      uid_list.push(user.uid)
+    })
+    axios.delete('/v1/users', {
+      data: {
+        uids: uid_list
+      }
+    }).then((res) => {
+        if (res.data.code === 0) {
+          ElMessage.success("删除成功")
+          setTimeout(() => {
+            window.location.reload()
+          }, 1000)
+        } else {
+          ElMessage.error(res.data.msg)
+        }
+    }).catch((err) => {
+      ElMessage.error(err)
+    })
 }
 
 function handleSelectionChange(val) {
