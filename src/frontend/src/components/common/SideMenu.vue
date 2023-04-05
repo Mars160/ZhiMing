@@ -1,8 +1,8 @@
 <template>
   <el-container>
+      <el-aside v-if="show_menu" width="200">
     <el-menu
-        v-if="show_menu"
-        style="height: 100vh;width:200px;"
+        style="height: 100%;width:200px;min-height: 100vh;"
         router
         background-color="#001529"
         text-color="hsla(0, 0%, 100%, .65)"
@@ -32,6 +32,7 @@
             <span>修改密码</span>
         </el-button>
     </el-menu>
+      </el-aside>
     <div v-else>
       <el-button
           type="primary"
@@ -86,10 +87,12 @@
         </el-menu>
       </el-drawer>
     </div>
-
-    <div class="m-15 fill">
-      <router-view/>
-    </div>
+    <el-main>
+<!--    <div class="m-15 fill">-->
+<!--      <router-view/>-->
+<!--    </div>-->
+        <router-view/>
+    </el-main>
   </el-container>
 
 </template>

@@ -5,7 +5,7 @@
         size="large"
         fit
         width="100%"
-        height="700"
+        height="500"
         table-layout="auto"
         v-infinite-scroll="loadMoreUser"
         :v-infinite-scroll-disabled="loadDisable"

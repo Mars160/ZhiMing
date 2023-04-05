@@ -1,7 +1,7 @@
 <template>
     <el-card class="middle-parent">
         <canvas id="homework-canvas" :width="WIDTH" :height="HEIGHT">如果您看到这条消息，说明您的浏览器并不支持canvas绘图，请在其他设备上打开本网站。</canvas>
-        <img class="canvas-img" />
+        <img class="canvas-img"  alt="题目" src=""/>
         <div style="padding: 14px; text-align: center">
             <p>{{ text }}</p>
             <el-row class="middle-row">
@@ -105,7 +105,7 @@ function canvasToImg() {
         actualTop += current.offsetTop
         current = current.offsetParent
     }
-    const image = new Image()
+    const image = document.getElementsByClassName('canvas-img')[0]
     const imageWidth = img.scrollWidth + 'px'
     const imageHeight = img.scrollHeight + 'px'
     image.src = img.toDataURL('image/png')
@@ -115,7 +115,6 @@ function canvasToImg() {
     image.style.left = actualLeft + 'px'
     image.style.top = actualTop + 'px'
     image.style.opacity = '0'
-    document.body.appendChild(image)
     return image
 }
 </script>
@@ -123,15 +122,16 @@ function canvasToImg() {
 <style scoped>
 #homework-canvas {
     border: 1px solid #000000;
-    max-height: 100%;
-    max-width: 100%;
+    max-height: 61.8vh;
+    max-width: 61.8vw;
 }
 
 .middle-parent {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0;
+    flex-direction: column;
+    height: 95%;
 }
 
 .middle-row {
