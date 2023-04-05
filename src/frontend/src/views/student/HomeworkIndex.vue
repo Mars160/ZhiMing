@@ -1,6 +1,7 @@
 <template>
     <el-card class="middle-parent">
-        <canvas id="homework-canvas" :width="WIDTH" :height="HEIGHT" style="height: 73vh">如果您看到这条消息，说明您的浏览器并不支持canvas绘图，请在其他设备上打开本网站。</canvas>
+        <canvas id="homework-canvas" :width="WIDTH" :height="HEIGHT">如果您看到这条消息，说明您的浏览器并不支持canvas绘图，请在其他设备上打开本网站。</canvas>
+        <img class="canvas-img" />
         <div style="padding: 14px; text-align: center">
             <p>{{ text }}</p>
             <el-row class="middle-row">
@@ -71,6 +72,7 @@ function drawNextQuestions() {
         ctx.fillText(`${num}. ${qname}`, MARGIN, y)
     }
     pageIndex.value++
+    canvasToImg()
 }
 
 function drawPrevQuestions() {
@@ -91,23 +93,54 @@ function drawPrevQuestions() {
         ctx.fillText(`${num}. ${qname}`, MARGIN, y)
     }
     pageIndex.value--
+    canvasToImg()
+}
+
+function canvasToImg() {
+    let actualLeft = img.offsetLeft
+    let actualTop = img.offsetTop
+    let current = img.offsetParent
+    while (current !== null) {
+        actualLeft += current.offsetLeft
+        actualTop += current.offsetTop
+        current = current.offsetParent
+    }
+    const image = new Image()
+    const imageWidth = img.scrollWidth + 'px'
+    const imageHeight = img.scrollHeight + 'px'
+    image.src = img.toDataURL('image/png')
+    image.style.width = imageWidth
+    image.style.height = imageHeight
+    image.style.position = 'absolute'
+    image.style.left = actualLeft + 'px'
+    image.style.top = actualTop + 'px'
+    image.style.opacity = '0'
+    document.body.appendChild(image)
+    return image
 }
 </script>
 
 <style scoped>
 #homework-canvas {
     border: 1px solid #000000;
+    max-height: 100%;
+    max-width: 100%;
 }
 
 .middle-parent {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 0;
 }
 
 .middle-row {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.canvas-img {
+    opacity: 0;
 }
 </style>
