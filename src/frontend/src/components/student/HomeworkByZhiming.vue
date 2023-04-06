@@ -1,11 +1,11 @@
 <template>
     <el-table
-        style="width: 100%"
-        border
-        height="550"
-        :data="questions"
-        :default-sort="{prop: 'page', order: 'ascending'}"
-        @selection-change="handleSelectionChange"
+            style="width: 100%"
+            border
+            height="550"
+            :data="questions"
+            :default-sort="{prop: 'page', order: 'ascending'}"
+            @selection-change="handleSelectionChange"
     >
         <el-table-column type="selection"/>
         <el-table-column label="序号" prop="index" width="100" sortable v-if="false"/>
@@ -46,7 +46,7 @@ function submit() {
         qids: qids
     }).then((re) => {
         const res = re.data
-        if(res.code !== 0)
+        if (res.code !== 0)
             ElMessage.error(res.msg)
         else
             ElMessage.success("提交成功")

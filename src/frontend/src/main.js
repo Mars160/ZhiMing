@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import {createApp} from 'vue'
 import App from './App.vue'
 import router from './router'
 import axios from "axios";
@@ -19,4 +19,4 @@ axios.interceptors.request.use(
 const app = createApp(App)
 app.use(router).mount('#app')
 //设置默认语言
-app.config.globalProperties.$ELEMENT = { locale }
+app.config.globalProperties.$ELEMENT = {locale}

@@ -1,12 +1,15 @@
 <template>
     <el-card class="middle-parent">
-        <canvas id="homework-canvas" :width="WIDTH" :height="HEIGHT">如果您看到这条消息，说明您的浏览器并不支持canvas绘图，请在其他设备上打开本网站。</canvas>
-        <img class="canvas-img"  alt="题目" src=""/>
+        <canvas id="homework-canvas" :width="WIDTH" :height="HEIGHT">
+            如果您看到这条消息，说明您的浏览器并不支持canvas绘图，请在其他设备上打开本网站。
+        </canvas>
+        <img class="canvas-img" alt="题目" src=""/>
         <div style="padding: 14px; text-align: center">
             <p>{{ text }}</p>
             <el-row class="middle-row">
                 <el-button type="primary" @click="drawPrevQuestions()" :disabled="pageIndex <= 1">上一页</el-button>
-                <el-button type="primary" @click="drawNextQuestions()" :disabled="pageIndex >= totalPage">下一页</el-button>
+                <el-button type="primary" @click="drawNextQuestions()" :disabled="pageIndex >= totalPage">下一页
+                </el-button>
             </el-row>
         </div>
     </el-card>
@@ -14,8 +17,9 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import axios  from "axios";
+import axios from "axios";
 import {ElMessage} from "element-plus";
+
 const WIDTH = 2480
 const HEIGHT = 3508
 const EACH_PAGE = 5
@@ -32,7 +36,7 @@ let text = '右键保存图片到设备'
 let img = null
 let ctx = null
 
-if(innerHeight > innerWidth) {
+if (innerHeight > innerWidth) {
     text = '长按保存图片到设备'
 }
 
@@ -63,7 +67,7 @@ function drawNextQuestions() {
     ctx.fillRect(0, 0, img.width, img.height)
     ctx.fillStyle = 'rgb(0, 0, 0)'
     ctx.font = FONT
-    for(let num = pageIndex.value * EACH_PAGE + 1; num <= (pageIndex.value + 1) * EACH_PAGE; num++) {
+    for (let num = pageIndex.value * EACH_PAGE + 1; num <= (pageIndex.value + 1) * EACH_PAGE; num++) {
         const qname = questions[num - 1]
         if (qname === undefined) {
             break
@@ -84,7 +88,7 @@ function drawPrevQuestions() {
     ctx.fillRect(0, 0, img.width, img.height)
     ctx.fillStyle = 'rgb(0, 0, 0)'
     ctx.font = FONT
-    for(let num = prevPage * EACH_PAGE + 1; num <= (prevPage + 1) * EACH_PAGE; num++) {
+    for (let num = prevPage * EACH_PAGE + 1; num <= (prevPage + 1) * EACH_PAGE; num++) {
         const qname = questions[num - 1]
         if (qname === undefined) {
             break

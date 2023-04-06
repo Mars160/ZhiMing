@@ -1,99 +1,99 @@
 <template>
-  <el-container>
-      <el-aside v-if="show_menu" width="200">
-    <el-menu
-        style="height: 100%;width:200px;min-height: 100vh;"
-        router
-        background-color="#001529"
-        text-color="hsla(0, 0%, 100%, .65)"
-        active-text-color="#fff"
-        class = "el-menu-vertical"
-        :default-active="path"
-    >
-      <slot/>
-      <el-button
-          class = "el-menu-item"
-          color="#001529"
-        @click="logout"
-      >
-        <el-icon>
-          <i-ep-circle-close/>
-        </el-icon>
-        <span>登出</span>
-      </el-button>
-        <el-button
-                class = "el-menu-item"
-                color="#001529"
-                @click="editPwd"
-        >
-            <el-icon>
-                <i-ep-edit/>
-            </el-icon>
-            <span>修改密码</span>
-        </el-button>
-    </el-menu>
-      </el-aside>
-    <div v-else>
-      <el-button
-          type="primary"
-          circle
-          size="large"
-          class="affix"
-          @click="show_drawer = !show_drawer"
-      >
-        <el-icon>
-          <i-ep-menu v-show="show_drawer === false"/>
-          <i-ep-close v-show="show_drawer"/>
-        </el-icon>
-      </el-button>
-      <el-drawer
-          v-model="show_drawer"
-          direction="ltr"
-          size="101%"
-          :with-header="false"
-          :show-close="false"
-      >
-        <el-menu
-            router
-            style="height: 100vh"
-            background-color="#001529"
-            text-color="hsla(0, 0%, 100%, .65)"
-            active-text-color="#fff"
-            class="el-menu-drawer"
-            :default-active="path"
-            @select="close_menu"
-        >
-          <slot/>
-          <el-button
-              class = "el-menu-item"
-              color="#001529"
-              @click="logout"
-          >
-            <el-icon>
-              <i-ep-circle-close/>
-            </el-icon>
-            <span>登出</span>
-          </el-button>
+    <el-container>
+        <el-aside v-if="show_menu" width="200">
+            <el-menu
+                    style="height: 100%;width:200px;min-height: 100vh;"
+                    router
+                    background-color="#001529"
+                    text-color="hsla(0, 0%, 100%, .65)"
+                    active-text-color="#fff"
+                    class="el-menu-vertical"
+                    :default-active="path"
+            >
+                <slot/>
+                <el-button
+                        class="el-menu-item"
+                        color="#001529"
+                        @click="logout"
+                >
+                    <el-icon>
+                        <i-ep-circle-close/>
+                    </el-icon>
+                    <span>登出</span>
+                </el-button>
+                <el-button
+                        class="el-menu-item"
+                        color="#001529"
+                        @click="editPwd"
+                >
+                    <el-icon>
+                        <i-ep-edit/>
+                    </el-icon>
+                    <span>修改密码</span>
+                </el-button>
+            </el-menu>
+        </el-aside>
+        <div v-else>
             <el-button
-                    class = "el-menu-item"
-                    color="#001529"
-                    @click="editPwd"
+                    type="primary"
+                    circle
+                    size="large"
+                    class="affix"
+                    @click="show_drawer = !show_drawer"
             >
                 <el-icon>
-                    <i-ep-edit/>
+                    <i-ep-menu v-show="show_drawer === false"/>
+                    <i-ep-close v-show="show_drawer"/>
                 </el-icon>
-                <span>修改密码</span>
             </el-button>
-        </el-menu>
-      </el-drawer>
-    </div>
-    <el-main>
-<!--    <div class="m-15 fill">-->
-<!--      <router-view/>-->
-<!--    </div>-->
-        <router-view/>
-    </el-main>
-  </el-container>
+            <el-drawer
+                    v-model="show_drawer"
+                    direction="ltr"
+                    size="101%"
+                    :with-header="false"
+                    :show-close="false"
+            >
+                <el-menu
+                        router
+                        style="height: 100vh"
+                        background-color="#001529"
+                        text-color="hsla(0, 0%, 100%, .65)"
+                        active-text-color="#fff"
+                        class="el-menu-drawer"
+                        :default-active="path"
+                        @select="close_menu"
+                >
+                    <slot/>
+                    <el-button
+                            class="el-menu-item"
+                            color="#001529"
+                            @click="logout"
+                    >
+                        <el-icon>
+                            <i-ep-circle-close/>
+                        </el-icon>
+                        <span>登出</span>
+                    </el-button>
+                    <el-button
+                            class="el-menu-item"
+                            color="#001529"
+                            @click="editPwd"
+                    >
+                        <el-icon>
+                            <i-ep-edit/>
+                        </el-icon>
+                        <span>修改密码</span>
+                    </el-button>
+                </el-menu>
+            </el-drawer>
+        </div>
+        <el-main>
+            <!--    <div class="m-15 fill">-->
+            <!--      <router-view/>-->
+            <!--    </div>-->
+            <router-view/>
+        </el-main>
+    </el-container>
 
 </template>
 
@@ -111,16 +111,16 @@ let show_menu = true
 
 //检测是否移动端
 if (window.innerWidth < window.innerHeight) {
-  show_menu = false
+    show_menu = false
 }
 
 function logout() {
-  localStorage.removeItem('token')
-  window.location.reload()
+    localStorage.removeItem('token')
+    window.location.reload()
 }
 
 function close_menu() {
-  show_drawer.value = false
+    show_drawer.value = false
 }
 
 function editPwd() {
@@ -150,51 +150,51 @@ function editPwd() {
 
 <style>
 .m-15 {
-  margin: 15px;
+    margin: 15px;
 }
 
 .affix {
-  position: fixed;
-  bottom: 100px;
-  right: 30px;
-  z-index: 2023;
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
+    z-index: 2023;
 }
 
 el-menu {
-  border-right: none;
+    border-right: none;
 }
 
 .el-menu-item.is-active {
-  background-color: #1890ff !important;
+    background-color: #1890ff !important;
 }
 
-.el-menu-item{
-  justify-content: center;
-  width: 100%;
+.el-menu-item {
+    justify-content: center;
+    width: 100%;
 
     margin-left: 0 !important;
 }
 
 .el-menu-vertical {
-  width: 200px;
-  height: 100%;
+    width: 200px;
+    height: 100%;
 }
 
 .el-menu-drawer {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 ul {
-  border-right-width: 0;
+    border-right-width: 0;
 }
 
 .fill {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 .el-drawer__body {
-  padding: 0;
+    padding: 0;
 }
 </style>

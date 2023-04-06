@@ -1,7 +1,7 @@
 <template>
-  <LoginComponent
-      :login-callback="loginCallback"
-  />
+    <LoginComponent
+            :login-callback="loginCallback"
+    />
     <router-view/>
 </template>
 
@@ -16,54 +16,54 @@ const show = ref(true)
 provide("show-login", show)
 
 const loginCallback = () => {
-  axios.get('/v1/role').then((res) => {
-    const result = res.data
-    if (result.code === 0) {
-      const role = result.data
-      localStorage.setItem('uid', result.uid)
-      if (role === '管理员') {
-        //router push
-        //如果当前url含有admin，不跳转
-        if(window.location.href.includes('admin')) return
-        window.location.href = '#/admin/'
-      } else if(role === '教师') {
-        if (window.location.href.includes('teacher')) return
-        window.location.href = '#/teacher/'
-      } else if(role === '学生') {
-        if (window.location.href.includes('student')) return
-        window.location.href = '#/student/'
-      }
-    }
-  }).catch((err) => {
-    //获取返回body
-    const body = err.response.data
-    if(body.msg === 'Missing Authorization Header') {
-      ElMessage({
-        message: '请先登录',
-        type: 'error',
-        showClose: true,
-      })
-      return
-    } else {
-      ElMessage({
-        message: err,
-        type: 'error',
-        showClose: true,
-      })
-    }
-    localStorage.removeItem('token')
-    //2s后刷新
-    setTimeout(() => {
-      window.location.reload()
-    }, 2000)
-  })
+    axios.get('/v1/role').then((res) => {
+        const result = res.data
+        if (result.code === 0) {
+            const role = result.data
+            localStorage.setItem('uid', result.uid)
+            if (role === '管理员') {
+                //router push
+                //如果当前url含有admin，不跳转
+                if (window.location.href.includes('admin')) return
+                window.location.href = '#/admin/'
+            } else if (role === '教师') {
+                if (window.location.href.includes('teacher')) return
+                window.location.href = '#/teacher/'
+            } else if (role === '学生') {
+                if (window.location.href.includes('student')) return
+                window.location.href = '#/student/'
+            }
+        }
+    }).catch((err) => {
+        //获取返回body
+        const body = err.response.data
+        if (body.msg === 'Missing Authorization Header') {
+            ElMessage({
+                message: '请先登录',
+                type: 'error',
+                showClose: true,
+            })
+            return
+        } else {
+            ElMessage({
+                message: err,
+                type: 'error',
+                showClose: true,
+            })
+        }
+        localStorage.removeItem('token')
+        //2s后刷新
+        setTimeout(() => {
+            window.location.reload()
+        }, 2000)
+    })
 }
 
 if ('token' in localStorage) {
-  show.value = false
-  loginCallback();
+    show.value = false
+    loginCallback();
 } else {
-  show.value = true
+    show.value = true
 }
 
 
