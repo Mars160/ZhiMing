@@ -65,7 +65,7 @@ Authorization: Bear eyJ0eXasd123kgGTS891516DGrqoifjrjgo...
 | 方法   | 含义       | URL参数 | 请求体                                                   | data类型    | data内容       | 备注                           |
 | ---- | -------- | ----- | ----------------------------------------------------- | --------- | ------------ | ---------------------------- |
 | GET  | 获取新生成的作业 |       |                                                       | Object    | `[qname...]` | 作业的完整URL                     |
-| POST | 上传作业情况   |       | `{"p123":[false,true,false],"p123":[true,true,true]}` | undefined |              | "pxx"指第xx页，数组中的第n个元素指第n题是否正确 |
+| POST | 上传作业情况   |       | `{"qids":[qid...]}` | undefined |              | "pxx"指第xx页，数组中的第n个元素指第n题是否正确 |
 
 ---
 
