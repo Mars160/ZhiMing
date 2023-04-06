@@ -122,7 +122,8 @@ class Questions(restful.Resource):
             rqb.place = place
             db.session.add(rqb)
 
-            self.add_not_exist_point(point, question.qid)
+            with db.session.no_autoflush:
+                self.add_not_exist_point(point, question.qid)
 
             db.session.commit()
 
@@ -161,7 +162,8 @@ class Questions(restful.Resource):
                 "place": place
             })
 
-            self.add_not_exist_point(point, qid)
+            with db.session.no_autoflush:
+                self.add_not_exist_point(point, qid)
 
             db.session.commit()
             return response
