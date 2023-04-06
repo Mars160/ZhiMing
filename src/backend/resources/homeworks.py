@@ -18,21 +18,27 @@ class Homeworks(restful.Resource):
             return response
 
         # 去Homework表中查找是否有当前用户的作业
-        homeworks = db.session.query(Homework).filter_by(uid=cur_uid).first()
-        if homeworks:
-            qids = homeworks.qids
-            qids = qids.split(',')
-            qids = [int(qid) for qid in qids]
-            questions = db.session.query(Question).filter(Question.qid.in_(qids)).all()
-            questions = {str(q.qid): q.qname for q in questions}
-            data = []
-            for qid in qids:
-                data.append(questions[str(qid)])
-            response['data'] = data
-            return response
+        # 查找RUQ表中是否有没Used的记录
+        ruq = db.session.query(RUQ).filter(RUQ.uid == cur_uid and RUQ.used == False).all()
+        if len(ruq) == 0:
+            homeworks = db.session.query(Homework).filter_by(uid=cur_uid).first()
+            if homeworks:
+                qids = homeworks.qids
+                qids = qids.split(',')
+                qids = [int(qid) for qid in qids]
+                questions = db.session.query(Question).filter(Question.qid.in_(qids)).all()
+                questions = {str(q.qid): q.qname for q in questions}
+                data = []
+                for qid in qids:
+                    data.append(questions[str(qid)])
+                response['data'] = data
+                return response
 
-        ruq = db.session.query(RUQ).filter_by(uid=cur_uid).all()
-        wrong_qids = {r.qid for r in ruq}
+        wrong_qids = set()
+
+        for r in ruq:
+            r.used = True
+            wrong_qids.add(r.qid)
 
         # 去RUQ表中查找当前用户的所有题目错误的知识点，并对pid分组计数
         rpq_sub = db.session.query(RPQ).subquery()
@@ -91,4 +97,30 @@ class Homeworks(restful.Resource):
         db.session.commit()
 
         response['data'] = [q['qname'] for q in qs]
+        return response
+
+    @jwt_required()
+    def post(self):
+        response = response_base.copy()
+
+        cur_uid = get_jwt_identity()
+
+        if check_permission(cur_uid, ['管理员', '教师']):
+            response['code'] = 400
+            response['msg'] = '？？你在干什么'
+            return response
+
+        data = request.get_json()
+        if 'qids' not in data:
+            response['code'] = 400
+            response['msg'] = '参数错误'
+            return response
+        qids = data['qids']
+
+        db.session.execute(
+            RUQ.__table__.insert(),
+            [{"uid": cur_uid, "qid": qid} for qid in qids]
+        )
+        db.session.commit()
+
         return response

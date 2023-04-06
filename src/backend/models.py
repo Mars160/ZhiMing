@@ -10,6 +10,7 @@ VARCHAR = db.VARCHAR
 TEXT = db.TEXT
 ForeignKey = db.ForeignKey
 TIMESTAMP = db.TIMESTAMP
+Boolean = db.Boolean
 
 
 class User(db.Model):
@@ -186,6 +187,7 @@ class RUQ(db.Model):
     uqid = Column(Integer, primary_key=True, autoincrement=True, comment='关系id')
     uid = Column(Integer, ForeignKey('User.uid'), nullable=False, comment='用户id')
     qid = Column(Integer, ForeignKey('Question.qid'), nullable=False, comment='题目id')
+    used = Column(Boolean, nullable=False, comment='是否已经使用过')
 
 
     def __repr__(self):
