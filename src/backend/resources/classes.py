@@ -85,11 +85,10 @@ class Classes(restful.Resource):
 
             if role == '管理员':
                 tids = data.get('tids')
-                for tid in tids:
-                    ruc = RUC()
-                    ruc.cid = c.cid
-                    ruc.uid = tid
-                    db.session.add(ruc)
+                db.session.execute(
+                    RUC.__table__.insert(),
+                    [{'cid': c.cid, 'uid': tid} for tid in tids]
+                )
             else:
                 ruc = RUC()
                 ruc.cid = c.cid
@@ -97,11 +96,10 @@ class Classes(restful.Resource):
                 db.session.add(ruc)
 
             sids = data.get('sids')
-            for sid in sids:
-                ruc = RUC()
-                ruc.cid = c.cid
-                ruc.uid = sid
-                db.session.add(ruc)
+            db.session.execute(
+                RUC.__table__.insert(),
+                [{'cid': c.cid, 'uid': sid} for sid in sids]
+            )
         db.session.commit()
         return response
 
@@ -131,21 +129,19 @@ class Classes(restful.Resource):
                 sids = data.get('sids')
                 db.session.query(RUC).filter(
                     (RUC.cid == cid) and (User.uid == RUC.uid) and (User.role == '学生')).delete()
-                for sid in sids:
-                    ruc = RUC()
-                    ruc.cid = cid
-                    ruc.uid = sid
-                    db.session.add(ruc)
+                db.session.execute(
+                    RUC.__table__.insert(),
+                    [{'cid': cid, 'uid': sid} for sid in sids]
+                )
             if role == '管理员':
                 if 'tids' in data:
                     tids = data.get('tids')
                     db.session.query(RUC).filter(
                         (RUC.cid == cid) and (User.uid == RUC.uid) and (User.role == '教师')).delete()
-                    for tid in tids:
-                        ruc = RUC()
-                        ruc.cid = cid
-                        ruc.uid = tid
-                        db.session.add(ruc)
+                    db.session.execute(
+                        RUC.__table__.insert(),
+                        [{'cid': cid, 'uid': tid} for tid in tids]
+                    )
             db.session.commit()
         else:
             response['code'] = 403
