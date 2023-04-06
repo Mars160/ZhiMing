@@ -41,13 +41,11 @@ def create_teachers(name, pwd):
     teacher.nickname = fake.name()
     teacher.setPassword(pwd)
     db.session.add(teacher)
-    for i in range(TEACHET_COUNT - 1):
-        teacher = User()
-        teacher.uname = fake.user_name() + str(i)
-        teacher.role = '教师'
-        teacher.nickname = fake.name()
-        teacher.setPassword(pwd)
-        db.session.add(teacher)
+
+    db.session.execute(
+        User.__table__.insert(),
+        [{'uname': fake.user_name() + str(i), 'role': '教师', 'nickname': fake.name(), 'pwd': pwd} for i in range(TEACHET_COUNT - 1)]
+    )
     db.session.commit()
 
 
@@ -59,30 +57,44 @@ def create_student(name, pwd):
     student.nickname = fake.name()
     student.setPassword(pwd)
     db.session.add(student)
-    for i in range(STUDENT_EACH_TEACHER * teacher_count - 1):
-        student = User()
-        student.uname = fake.user_name() + str(i)
-        student.role = '学生'
-        student.nickname = fake.name()
-        student.setPassword(pwd)
-        db.session.add(student)
+
+    db.session.execute(
+        User.__table__.insert(),
+        [{'uname': fake.user_name() + str(i), 'role': '学生', 'nickname': fake.name(), 'pwd': pwd} for i in range(STUDENT_EACH_TEACHER * teacher_count - 1)]
+    )
+
+    # for i in range(STUDENT_EACH_TEACHER * teacher_count - 1):
+    #     student = User()
+    #     student.uname = fake.user_name() + str(i)
+    #     student.role = '学生'
+    #     student.nickname = fake.name()
+    #     student.setPassword(pwd)
+    #     db.session.add(student)
     db.session.commit()
 
 
 def create_book():
-    for i in range(BOOK_COUNT):
-        book = Book()
-        book.bname = fake.sentence(nb_words=2, variable_nb_words=True)
-        book.grade = 41
-        db.session.add(book)
+    db.session.execute(
+        Book.__table__.insert(),
+        [{'bname': fake.sentence(nb_words=2, variable_nb_words=True), 'grade': 41} for i in range(BOOK_COUNT)]
+    )
+    # for i in range(BOOK_COUNT):
+    #     book = Book()
+    #     book.bname = fake.sentence(nb_words=2, variable_nb_words=True)
+    #     book.grade = 41
+    #     db.session.add(book)
     db.session.commit()
 
 
 def create_points():
-    for i in range(POINTS_COUNT):
-        point = Point()
-        point.pname = fake.sentence(nb_words=2, variable_nb_words=False)
-        db.session.add(point)
+    db.session.execute(
+        Point.__table__.insert(),
+        [{'pname': fake.sentence(nb_words=2, variable_nb_words=False)} for i in range(POINTS_COUNT)]
+    )
+    # for i in range(POINTS_COUNT):
+    #     point = Point()
+    #     point.pname = fake.sentence(nb_words=2, variable_nb_words=False)
+    #     db.session.add(point)
     db.session.commit()
 
 
@@ -90,42 +102,35 @@ def create_question():
     books = db.session.query(Book.bid).all()
     pids = db.session.query(Point.pid).all()
     MAX_PLACE = math.ceil(QUESTION_EACH_BOOK / MAX_PAGE)
+    now_qid = 1
+
+    db.session.flush()
+
     for book in books:
-        for i in range(QUESTION_EACH_BOOK):
-            question = Question()
-            question.qname = fake.paragraph(nb_sentences=5, variable_nb_sentences=True)
-            question.level = 1
-            db.session.add(question)
-            db.session.flush()
-
-            rqb = RQB()
-            rqb.bid = book.bid
-            rqb.qid = question.qid
-            rqb.page = randint(1, MAX_PAGE)
-            rqb.place = randint(1, MAX_PLACE)
-            db.session.add(rqb)
-
-            # 随机选择不超过POINTS_MAX_EACH_QUESTION个知识点
-            points = choices(pids, k=randint(1, POINTS_MAX_EACH_QUESTION))
-            for point in points:
-                rqp = RPQ()
-                rqp.qid = question.qid
-                rqp.pid = point.pid
-                db.session.add(rqp)
-
+        db.session.execute(
+            Question.__table__.insert(),
+            [{'qname': fake.paragraph(nb_sentences=5, variable_nb_sentences=True), 'level': 1} for i in
+             range(QUESTION_EACH_BOOK)]
+        )
+        db.session.execute(
+            RQB.__table__.insert(),
+            [{'bid': book.bid, 'qid': now_qid + i, 'page': randint(1, MAX_PAGE), 'place': randint(1, MAX_PLACE)} for i in range(QUESTION_EACH_BOOK)]
+        )
+        db.session.execute(
+            RPQ.__table__.insert(),
+            [{'qid': now_qid + i, 'pid': point.pid} for i in range(QUESTION_EACH_BOOK)  for point in choices(pids, k=randint(1, POINTS_MAX_EACH_QUESTION)) ]
+        )
+        now_qid += QUESTION_EACH_BOOK
     db.session.commit()
 
 
 def create_wrong():
     students = db.session.query(User.uid).filter(User.role == '学生').all()
     questions = db.session.query(Question.qid).all()
-    for student in students:
-        wrong_qs = choices(questions, k=randint(MIN_WRONG_COUNT_EACH_STUDENT, MAX_WRONG_COUNT_EACH_STUDENT))
-        for i in wrong_qs:
-            wrong = RUQ()
-            wrong.uid = student.uid
-            wrong.qid = i.qid
-            db.session.add(wrong)
+    db.session.execute(
+        RUQ.__table__.insert(),
+        [{'uid': student.uid, 'qid': question.qid, 'used': False} for student in students for question in choices(questions, k=randint(MIN_WRONG_COUNT_EACH_STUDENT, MAX_WRONG_COUNT_EACH_STUDENT))]
+    )
     db.session.commit()
 
 
