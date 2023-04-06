@@ -3,88 +3,85 @@ from .ext import *
 
 class Questions(restful.Resource):
     UPDATE_TIME = 100
+
     @jwt_required()
     def get(self):
         response = response_base.copy()
 
         uid = get_jwt_identity()
         user = db.session.query(User).filter(User.uid == uid).first()
-        if not check_permission(user.uid, ['教师', '管理员']):
-            response['msg'] = 'permission denied'
-            response['code'] = 403
+
+        # 获取url中的参数
+        limit = request.args.get('limit', 10, type=int)
+        page = request.args.get('page', 1, type=int)
+        orderby = request.args.get('orderby', 'qid', type=str)
+        order = request.args.get('order', 'asc', type=str)
+        bid = request.args.get('bid', None, type=int)
+        pagerange = request.args.get('pagerange', None, type=str)
+
+        page_list = pagerange.split('-') if pagerange else None
+        if bid is None:
+            response['code'] = 400
+            response['msg'] = 'parameter bid is required'
             return response
-        else:
-            # 获取url中的参数
-            limit = request.args.get('limit', 10, type=int)
-            page = request.args.get('page', 1, type=int)
-            orderby = request.args.get('orderby', 'qid', type=str)
-            order = request.args.get('order', 'asc', type=str)
-            bid = request.args.get('bid', None, type=int)
-            pagerange = request.args.get('pagerange', None, type=str)
 
-            page_list = pagerange.split('-') if pagerange else None
-            if bid is None:
-                response['code'] = 400
-                response['msg'] = 'parameter bid is required'
-                return response
+        ques = db.session.query(
+            RQB.bid,
+            RQB.page,
+            RQB.place,
+            Question.qid,
+            Question.qname,
+            Question.level,
+        ).filter(
+            RQB.bid == bid,
+            RQB.qid == Question.qid,
+            RQB.page >= (page_list[0] if page_list else 0),
+            RQB.page <= (page_list[1] if page_list else 999999),
+        )
+        pages = ques.count() // limit + 1
+        ques = ques.limit(limit).offset((page - 1) * limit).subquery()
 
-            ques = db.session.query(
-                RQB.bid,
-                RQB.page,
-                RQB.place,
-                Question.qid,
-                Question.qname,
-                Question.level,
-            ).filter(
-                RQB.bid == bid,
-                RQB.qid == Question.qid,
-                RQB.page >= (page_list[0] if page_list else 0),
-                RQB.page <= (page_list[1] if page_list else 999999),
-            )
-            pages = ques.count() // limit + 1
-            ques = ques.limit(limit).offset((page - 1) * limit).subquery()
-            #ques = ques.subquery()
-            query = db.session.query(
-                ques.c.bid,
-                ques.c.page,
-                ques.c.place,
-                ques.c.qid,
-                ques.c.qname,
-                ques.c.level,
-                RPQ.pid,
-                Point.pname,
-                RPQ.pqid,
-            ).filter(
-                RPQ.qid == ques.c.qid,
-                RPQ.pid == Point.pid,
-            ).all()
+        query = db.session.query(
+            ques.c.bid,
+            ques.c.page,
+            ques.c.place,
+            ques.c.qid,
+            ques.c.qname,
+            ques.c.level,
+            RPQ.pid,
+            Point.pname,
+            RPQ.pqid,
+        ).filter(
+            RPQ.qid == ques.c.qid,
+            RPQ.pid == Point.pid,
+        ).all()
 
-            response['data'] = []
-            #response['pages'] = pages
+        response['data'] = []
+        # response['pages'] = pages
 
-            question_dict = {}
-            for row in query:
-                qid = row.qid
-                if qid not in question_dict:
-                    question_dict[qid] = {
-                        'qname': row.qname,
-                        'level': row.level,
-                        'points': [row.pname],
-                        'page': row.page,
-                        'place': row.place
-                    }
-                else:
-                    question_dict[qid]['points'].append(row.pname)
-            for qid in question_dict:
-                item = {
-                    'qid': qid,
-                    'qname': question_dict[qid]['qname'],
-                    'level': question_dict[qid]['level'],
-                    'points': question_dict[qid]['points'],
-                    'page': question_dict[qid]['page'],
-                    'place': question_dict[qid]['place']
+        question_dict = {}
+        for row in query:
+            qid = row.qid
+            if qid not in question_dict:
+                question_dict[qid] = {
+                    'qname': row.qname,
+                    'level': row.level,
+                    'points': [row.pname],
+                    'page': row.page,
+                    'place': row.place
                 }
-                response['data'].append(item)
+            else:
+                question_dict[qid]['points'].append(row.pname)
+        for qid in question_dict:
+            item = {
+                'qid': qid,
+                'qname': question_dict[qid]['qname'],
+                'level': question_dict[qid]['level'],
+                'points': question_dict[qid]['points'],
+                'page': question_dict[qid]['page'],
+                'place': question_dict[qid]['place']
+            }
+            response['data'].append(item)
         return response
 
     @jwt_required()
@@ -105,7 +102,7 @@ class Questions(restful.Resource):
             page = data['page']
             place = data['place']
 
-            #查看bid是否存在
+            # 查看bid是否存在
             book = db.session.query(Book).filter(Book.bid == bid).first()
             if book is None:
                 response['code'] = 404
@@ -136,7 +133,7 @@ class Questions(restful.Resource):
             return response
 
     @jwt_required()
-    def put(self, qid:int):
+    def put(self, qid: int):
         response = response_base.copy()
 
         cur_uid = get_jwt_identity()
@@ -174,7 +171,7 @@ class Questions(restful.Resource):
             return response
 
     @jwt_required()
-    def delete(self, qid:int):
+    def delete(self, qid: int):
         response = response_base.copy()
 
         cur_uid = get_jwt_identity()

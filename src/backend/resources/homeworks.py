@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from .ext import *
-from sqlalchemy import func
+from sqlalchemy import func, and_
 from random import choices
 
 
@@ -19,7 +19,8 @@ class Homeworks(restful.Resource):
 
         # 去Homework表中查找是否有当前用户的作业
         # 查找RUQ表中是否有没Used的记录
-        ruq = db.session.query(RUQ).filter(RUQ.uid == cur_uid and RUQ.used == False).all()
+        ruq_query = db.session.query(RUQ).filter(and_(RUQ.uid == cur_uid, RUQ.used == False))
+        ruq = ruq_query.all()
         if len(ruq) == 0:
             homeworks = db.session.query(Homework).filter_by(uid=cur_uid).first()
             if homeworks:
@@ -33,6 +34,12 @@ class Homeworks(restful.Resource):
                     data.append(questions[str(qid)])
                 response['data'] = data
                 return response
+            else:
+                response['code'] = 404
+                response['msg'] = '没有错题！很优秀！'
+                return response
+        else:
+            ruq_query.update({'used': True})
 
         wrong_qids = set()
 
@@ -119,7 +126,7 @@ class Homeworks(restful.Resource):
 
         db.session.execute(
             RUQ.__table__.insert(),
-            [{"uid": cur_uid, "qid": qid} for qid in qids]
+            [{"uid": cur_uid, "qid": qid, 'used': False} for qid in qids]
         )
         db.session.commit()
 
