@@ -44,7 +44,8 @@ def create_teachers(name, pwd):
 
     db.session.execute(
         User.__table__.insert(),
-        [{'uname': fake.user_name() + str(i), 'role': '教师', 'nickname': fake.name(), 'pwd': pwd} for i in range(TEACHET_COUNT - 1)]
+        [{'uname': fake.user_name() + str(i), 'role': '教师', 'nickname': fake.name(), 'pwd': pwd} for i in
+         range(TEACHET_COUNT - 1)]
     )
     db.session.commit()
 
@@ -60,7 +61,8 @@ def create_student(name, pwd):
 
     db.session.execute(
         User.__table__.insert(),
-        [{'uname': fake.user_name() + str(i), 'role': '学生', 'nickname': fake.name(), 'pwd': pwd} for i in range(STUDENT_EACH_TEACHER * teacher_count - 1)]
+        [{'uname': fake.user_name() + str(i), 'role': '学生', 'nickname': fake.name(), 'pwd': pwd} for i in
+         range(STUDENT_EACH_TEACHER * teacher_count - 1)]
     )
 
     # for i in range(STUDENT_EACH_TEACHER * teacher_count - 1):
@@ -114,11 +116,13 @@ def create_question():
         )
         db.session.execute(
             RQB.__table__.insert(),
-            [{'bid': book.bid, 'qid': now_qid + i, 'page': randint(1, MAX_PAGE), 'place': randint(1, MAX_PLACE)} for i in range(QUESTION_EACH_BOOK)]
+            [{'bid': book.bid, 'qid': now_qid + i, 'page': randint(1, MAX_PAGE), 'place': randint(1, MAX_PLACE)} for i
+             in range(QUESTION_EACH_BOOK)]
         )
         db.session.execute(
             RPQ.__table__.insert(),
-            [{'qid': now_qid + i, 'pid': point.pid} for i in range(QUESTION_EACH_BOOK)  for point in choices(pids, k=randint(1, POINTS_MAX_EACH_QUESTION)) ]
+            [{'qid': now_qid + i, 'pid': point.pid} for i in range(QUESTION_EACH_BOOK) for point in
+             choices(pids, k=randint(1, POINTS_MAX_EACH_QUESTION))]
         )
         now_qid += QUESTION_EACH_BOOK
     db.session.commit()
@@ -129,7 +133,8 @@ def create_wrong():
     questions = db.session.query(Question.qid).all()
     db.session.execute(
         RUQ.__table__.insert(),
-        [{'uid': student.uid, 'qid': question.qid, 'used': False} for student in students for question in choices(questions, k=randint(MIN_WRONG_COUNT_EACH_STUDENT, MAX_WRONG_COUNT_EACH_STUDENT))]
+        [{'uid': student.uid, 'qid': question.qid, 'used': False} for student in students for question in
+         choices(questions, k=randint(MIN_WRONG_COUNT_EACH_STUDENT, MAX_WRONG_COUNT_EACH_STUDENT))]
     )
     db.session.commit()
 
@@ -197,6 +202,7 @@ def create(item):
 def drop_wrong():
     db.session.query(RUQ).delete()
     db.session.commit()
+
 
 def drop_question():
     db.session.query(RPQ).delete()
@@ -269,4 +275,3 @@ def drop_db(item):
 
     else:
         click.echo('参数错误，可选参数：db, question, points, book, student, teacher, test, all, prod')
-

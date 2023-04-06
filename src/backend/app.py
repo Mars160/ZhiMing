@@ -5,7 +5,6 @@ from resources import api
 from ext import db
 from dbconfig import MYSQL_STRING
 
-
 app = Flask(__name__)
 if app.config['ENV'] == 'development':
     app.config['JWT_SECRET_KEY'] = 'secret'
@@ -19,7 +18,6 @@ api.init_app(app)
 db.init_app(app)
 
 from migrate import *
-
 
 if __name__ == '__main__':
     app.run()

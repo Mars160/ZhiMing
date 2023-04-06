@@ -165,4 +165,3 @@ class Classes(restful.Resource):
             response['msg'] = 'permission denied'
 
         return response
-

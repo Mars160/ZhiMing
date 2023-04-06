@@ -41,7 +41,7 @@ class Points(restful.Resource):
         return response
 
     @jwt_required()
-    def put(self, pid:int):
+    def put(self, pid: int):
         response = response_base.copy()
 
         cur_uid = get_jwt_identity()
@@ -64,7 +64,7 @@ class Points(restful.Resource):
             return response
 
     @jwt_required()
-    def delete(self, pid:int):
+    def delete(self, pid: int):
         response = response_base.copy()
 
         cur_uid = get_jwt_identity()
@@ -84,6 +84,3 @@ class Points(restful.Resource):
         db.session.delete(point)
         db.session.commit()
         return response
-
-
-

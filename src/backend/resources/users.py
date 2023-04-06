@@ -14,10 +14,12 @@ class Users(restful.Resource):
         role = User.getRoleByUid(cur_uid)
         if role == '管理员':
             users = db.session.query(User).filter(User.role == '教师').limit(limit).offset((page - 1) * limit).all()
-            response['data'] = [{'uid': user.uid, 'uname': user.uname, 'nickname': user.nickname, 'role': user.role} for user in users]
+            response['data'] = [{'uid': user.uid, 'uname': user.uname, 'nickname': user.nickname, 'role': user.role} for
+                                user in users]
         elif role == '教师':
             users = db.session.query(User).filter(User.role == '学生').limit(limit).offset((page - 1) * limit).all()
-            response['data'] = [{'uid': user.uid, 'uname': user.uname, 'nickname': user.nickname, 'role': user.role} for user in users]
+            response['data'] = [{'uid': user.uid, 'uname': user.uname, 'nickname': user.nickname, 'role': user.role} for
+                                user in users]
         else:
             response['code'] = 403
             response['msg'] = 'permission denied'

@@ -33,8 +33,6 @@ class User(db.Model):
             User.__cache[uid] = user.role
         return User.__cache[uid]
 
-
-
     def __repr__(self):
         # 以json格式返回
         return dumps({
@@ -50,7 +48,7 @@ class User(db.Model):
             if len(str_id) <= 6:
                 str_id = '0' * (6 - len(str_id)) + str_id
             pwd = 'ZhiMing' + str_id
-        #self.pwd = pwd
+        # self.pwd = pwd
         self.pwd = generate_password_hash(pwd)
 
     def checkPassword(self, pwd):
@@ -189,7 +187,6 @@ class RUQ(db.Model):
     qid = Column(Integer, ForeignKey('Question.qid'), nullable=False, comment='题目id')
     used = Column(Boolean, nullable=False, comment='是否已经使用过')
 
-
     def __repr__(self):
         return dumps({
             'uqid': self.uqid,
@@ -214,6 +211,3 @@ class Homework(db.Model):
             'uid': self.uid,
             'qids': self.qids
         })
-
-
-
