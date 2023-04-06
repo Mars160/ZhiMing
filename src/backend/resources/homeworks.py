@@ -22,7 +22,7 @@ class Homeworks(restful.Resource):
         ruq_query = db.session.query(RUQ).filter(and_(RUQ.uid == cur_uid, RUQ.used == False))
         ruq = ruq_query.all()
         if len(ruq) == 0:
-            homeworks = db.session.query(Homework).filter_by(uid=cur_uid).first()
+            homeworks = db.session.query(Homework).filter_by(uid=cur_uid).order_by(Homework.timestamp.desc()).first()
             if homeworks:
                 qids = homeworks.qids
                 qids = qids.split(',')
@@ -33,6 +33,7 @@ class Homeworks(restful.Resource):
                 for qid in qids:
                     data.append(questions[str(qid)])
                 response['data'] = data
+                response['qids'] = qids
                 return response
             else:
                 response['code'] = 404
