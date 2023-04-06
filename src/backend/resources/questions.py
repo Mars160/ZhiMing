@@ -20,6 +20,9 @@ class Questions(restful.Resource):
             orderby = request.args.get('orderby', 'qid', type=str)
             order = request.args.get('order', 'asc', type=str)
             bid = request.args.get('bid', None, type=int)
+            pagerange = request.args.get('pagerange', None, type=str)
+
+            page_list = pagerange.split('-') if pagerange else None
             if bid is None:
                 response['code'] = 400
                 response['msg'] = 'parameter bid is required'
@@ -35,10 +38,12 @@ class Questions(restful.Resource):
             ).filter(
                 RQB.bid == bid,
                 RQB.qid == Question.qid,
+                RQB.page >= (page_list[0] if page_list else 0),
+                RQB.page <= (page_list[1] if page_list else 999999),
             )
             pages = ques.count() // limit + 1
             ques = ques.limit(limit).offset((page - 1) * limit).subquery()
-
+            #ques = ques.subquery()
             query = db.session.query(
                 ques.c.bid,
                 ques.c.page,
@@ -55,7 +60,7 @@ class Questions(restful.Resource):
             ).all()
 
             response['data'] = []
-            response['pages'] = pages
+            #response['pages'] = pages
 
             question_dict = {}
             for row in query:

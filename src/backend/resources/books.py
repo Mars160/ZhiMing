@@ -7,11 +7,7 @@ class Books(restful.Resource):
     @jwt_required()
     def get(self):
         response = response_base.copy()
-        uid = get_jwt_identity()
-        if not check_permission(uid, ['教师', '管理员']):
-            response['code'] = 403
-            response['msg'] = 'permission denied'
-            return response
+        # uid = get_jwt_identity()
 
         limit = request.args.get('limit', 10, type=int)
         page = request.args.get('page', 1, type=int)
