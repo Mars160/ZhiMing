@@ -1,0 +1,17 @@
+[Unit]
+Description=ZhiMing
+
+[Service]
+User=www
+Group=www
+Type=notify
+ExecStart=/usr/bin/uwsgi --ini /home/www/ZhiMing/src/release/app.ini 
+# Restart=on-failure
+PIDFile=/home/www/ZhiMing/uwsgi.pid
+KillSignal=SIGQUIT
+Restart=always
+NotifyAccess=all
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target
