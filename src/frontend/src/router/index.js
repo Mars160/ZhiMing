@@ -8,6 +8,7 @@ import BookManage from "@/views/teacher/BookManage.vue";
 import QuestionManage from "@/views/teacher/QuestionManage.vue";
 import StudentLayout from "@/views/student/StudentLayout.vue";
 import HomeworkIndex from "@/views/student/HomeworkIndex.vue";
+import QuestionUpload from "@/views/student/QuestionUpload.vue";
 
 const routes = [
   {
@@ -60,6 +61,10 @@ const routes = [
         {
             path: 'questions-download',
             component: HomeworkIndex,
+        },
+        {
+            path: 'questions-upload',
+            component: QuestionUpload,
         }
     ],
   },
