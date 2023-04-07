@@ -1,0 +1,3 @@
+[submodule "src/backend/plugins/zhiming-paddle-ocr-plugin"]
+	path = src/backend/plugins/zhiming-paddle-ocr-plugin
+	url = git@github.com:Mars160/zhiming-paddle-ocr-plugin.git
