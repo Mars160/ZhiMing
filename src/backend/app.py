@@ -2,7 +2,7 @@ from flask import Flask
 from flask_jwt_extended import JWTManager
 import os
 from resources import api
-from ext import db
+from ext import db, STATIC_FOLDER
 from dbconfig import MYSQL_STRING
 import logging
 from time import sleep
@@ -11,7 +11,6 @@ import shutil
 import atexit
 
 DEBUG = True
-STATIC_FOLDER = 'plugin-static'
 
 if DEBUG:
     logging.basicConfig(level=logging.DEBUG)

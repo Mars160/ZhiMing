@@ -12,6 +12,7 @@ from .role import Role
 from .users import Users
 from .classes import Classes
 from .homeworks import Homeworks
+from .plugins import Plugins
 
 import os
 from plugins.tunnel import set_global
@@ -30,6 +31,7 @@ api.add_resource(Role, '/v1/role')
 api.add_resource(Users, '/v1/users/<int:uid>', '/v1/users')
 api.add_resource(Classes, '/v1/classes/<int:cid>', '/v1/classes')
 api.add_resource(Homeworks, '/v1/homeworks')
+api.add_resource(Plugins, '/v1/plugins')
 
 plugins = os.listdir('plugins')
 if '__pycache__' in plugins:
