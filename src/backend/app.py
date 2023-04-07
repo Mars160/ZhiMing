@@ -44,20 +44,23 @@ for file in os.listdir(STATIC_FOLDER):
 logging.info('复制加载plugin中的静态资源')
 for plugin in os.listdir('plugins'):
     if os.path.isdir(os.path.join('plugins', plugin)):
+        os.mkdir(STATIC_FOLDER + os.sep + plugin)
         if os.path.isdir(os.path.join('plugins', plugin, "static")):
             for file in os.listdir(os.path.join('plugins', plugin, "static")):
-                shutil.copy(os.path.join('plugins', plugin, "static", file), STATIC_FOLDER)
+                shutil.copy(os.path.join('plugins', plugin, "static", file),
+                            STATIC_FOLDER + os.sep + plugin + os.sep + file)
+
 
 @atexit.register
 def clean():
     logging.info('程序结束，清空static目录')
     for file in os.listdir(STATIC_FOLDER):
         if file != 'DO NOT PUT FILES HERE' or file != 'README.md':
-            os.remove(os.path.join(STATIC_FOLDER, file))
+            shutil.rmtree(os.path.join(STATIC_FOLDER, file))
+
 
 api.init_app(app)
 db.init_app(app)
-
 
 if __name__ == '__main__':
     app.run(debug=DEBUG)
