@@ -160,3 +160,6 @@ uwsgi.ini
 
 #password等
 dbconfig.py
+
+#后端static
+backend/static/*
