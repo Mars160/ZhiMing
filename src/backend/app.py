@@ -7,7 +7,6 @@ from dbconfig import MYSQL_STRING
 import logging
 from time import sleep
 from plugins.tunnel import set_global
-import importlib
 import shutil
 import atexit
 
