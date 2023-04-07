@@ -162,4 +162,4 @@ uwsgi.ini
 dbconfig.py
 
 #后端static
-backend/static/*
+plugin-static/
