@@ -31,10 +31,14 @@
 </template>
 
 <script setup>
-import {provide, ref} from "vue";
+import {provide, ref, defineAsyncComponent} from "vue";
 import axios from "axios";
 import {ElMessage} from "element-plus";
-import BookUpsertDialog from "@/components/teacher/BookUpsertDialog.vue";
+
+const BookUpsertDialog = defineAsyncComponent(() => import(
+    /* webpackChunkName: "components/book-upsert-dialog" */
+    "@/components/teacher/BookUpsertDialog.vue"
+    ))
 
 const books = ref([])
 const LIMIT = 10
