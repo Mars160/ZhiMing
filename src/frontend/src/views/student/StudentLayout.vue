@@ -16,7 +16,12 @@
 </template>
 
 <script setup>
-import SideMenu from "@/components/common/SideMenu.vue";
+import {defineAsyncComponent} from "vue";
+
+const SideMenu = defineAsyncComponent(() => import(
+    /* webpackChunkName: "components/side-menu" */
+    '@/components/common/SideMenu.vue'
+    ))
 </script>
 
 <style scoped>
