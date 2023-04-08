@@ -35,6 +35,7 @@ module.exports = {
         ],
         output: {
             chunkFilename: 'js/[name].js',
+            filename: 'js/[name].js',
         },
     },
     css : {
