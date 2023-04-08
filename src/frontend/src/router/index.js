@@ -1,6 +1,6 @@
 import {createRouter, createWebHashHistory} from 'vue-router'
 import AdminLayout from "@/views/admin/AdminLayout.vue";
-import CommonIndex from "@/components/common/CommonIndex.vue";
+import CommonIndex from "@/views/common/CommonIndex.vue";
 import NotFound from "@/views/common/NotFound.vue";
 import UserManage from "@/views/common/UserManage.vue";
 import TeacherLayout from "@/views/teacher/TeacherLayout.vue";
