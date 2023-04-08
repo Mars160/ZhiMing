@@ -6,6 +6,7 @@ PROJ_ROOT=/home/www/ZhiMing/src
 cd $PROJ_ROOT
 echo '更新源码'
 sudo -u www git pull
+sudo -u www git submodule update --init --recursive --remote
 
 FRONT_ROOT=$PROJ_ROOT/src/frontend
 DIST=$FRONT_ROOT/dist
