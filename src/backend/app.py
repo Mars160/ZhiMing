@@ -42,14 +42,15 @@ for file in os.listdir(STATIC_FOLDER):
     if file != 'DO NOT PUT FILES HERE' or file != 'README.md':
         os.remove(os.path.join(STATIC_FOLDER, file))
 
-logging.info('复制加载plugin中的静态资源')
-for plugin in os.listdir('plugins'):
-    if os.path.isdir(os.path.join('plugins', plugin)):
-        os.mkdir(STATIC_FOLDER + os.sep + plugin)
-        if os.path.isdir(os.path.join('plugins', plugin, "static")):
-            for file in os.listdir(os.path.join('plugins', plugin, "static")):
-                shutil.copy(os.path.join('plugins', plugin, "static", file),
-                            STATIC_FOLDER + os.sep + plugin + os.sep + file)
+# 放弃插件中包含前端资源
+# logging.info('复制加载plugin中的静态资源')
+# for plugin in os.listdir('plugins'):
+#     if os.path.isdir(os.path.join('plugins', plugin)):
+#         os.mkdir(STATIC_FOLDER + os.sep + plugin)
+#         if os.path.isdir(os.path.join('plugins', plugin, "static")):
+#             for file in os.listdir(os.path.join('plugins', plugin, "static")):
+#                 shutil.copy(os.path.join('plugins', plugin, "static", file),
+#                             STATIC_FOLDER + os.sep + plugin + os.sep + file)
 
 
 @atexit.register
