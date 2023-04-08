@@ -6,11 +6,6 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="./favicon.ico">
     <title><%= htmlWebpackPlugin.options.title %></title>
-    <% if (htmlWebpackPlugin.options.cdn) { %>
-    <% Object.keys(htmlWebpackPlugin.options.cdn).forEach(function(key) { %>
-    <script src="<%= htmlWebpackPlugin.options.cdn[key] %>"></script>
-    <% }) %>
-    <% } %>
     <style>
         #app {
             font-family: Avenir, Helvetica, Arial, sans-serif;
