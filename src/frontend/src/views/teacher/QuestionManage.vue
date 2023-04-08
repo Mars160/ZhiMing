@@ -63,14 +63,10 @@
 </template>
 
 <script setup>
-import {provide, reactive, ref, defineAsyncComponent} from 'vue';
+import {provide, reactive, ref} from 'vue';
 import axios from "axios";
 import {ElMessage} from "element-plus";
-
-const QuestionUpsertDialog = defineAsyncComponent(() => import(
-    /* webpackChunkName: "components/question-upsert-dialog" */
-    "@/components/teacher/QuestionUpsertDialog.vue"
-    ))
+import QuestionUpsertDialog from "@/components/teacher/QuestionUpsertDialog.vue";
 
 sessionStorage.setItem('question_manage_last_bid', -1)
 

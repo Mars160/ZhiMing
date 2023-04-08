@@ -33,17 +33,6 @@ module.exports = {
                 autoInstall: true,
             }),
         ],
-        output: {
-            chunkFilename: 'js/[name].js',
-            filename: 'js/[name].js',
-        },
-    },
-    css : {
-        extract: {
-            ignoreOrder: true,
-            filename: 'css/[name].css',
-            chunkFilename: 'css/[name].css',
-        }
     },
     pages: {
         index: {

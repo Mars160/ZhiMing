@@ -14,16 +14,9 @@
 </template>
 
 <script setup>
-import {ref, defineAsyncComponent} from "vue";
-
-const HomeworkByTeacher = defineAsyncComponent(() => import(
-    /* webpackChunkName: "components/homework-by-teacher" */
-    "@/components/student/HomeworkByTeacher.vue"
-    ))
-const HomeworkByZhiming = defineAsyncComponent(() => import(
-    /* webpackChunkName: "components/homework-by-zhiming" */
-    "@/components/student/HomeworkByZhiming.vue"
-    ))
+import HomeworkByTeacher from "@/components/student/HomeworkByTeacher.vue";
+import HomeworkByZhiming from "@/components/student/HomeworkByZhiming.vue";
+import {ref} from "vue";
 
 const show = ref(true)
 const source = ref("none")

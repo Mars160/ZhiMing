@@ -32,12 +32,7 @@
 import {provide, ref} from "vue";
 import axios from "axios";
 import {ElMessage} from "element-plus";
-import {defineAsyncComponent} from "vue";
-
-const UserUpsertDialog = defineAsyncComponent(() => import(
-    /* webpackChunkName: "components/user-upsert-dialog" */
-    "@/components/common/UserUpsertDialog.vue"
-    ))
+import UserUpsertDialog from "@/components/common/UserUpsertDialog.vue";
 
 const LIMIT = 10;
 let PAGE = 1;
