@@ -1,3 +1,4 @@
-call .\backend\venv\Scripts\activate.bat
-python .\backend\app.py
+cd backend
+call .\venv\Scripts\activate.bat
+python .\app.py
 pause
