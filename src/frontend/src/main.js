@@ -3,8 +3,7 @@ import App from './App.vue'
 import router from './router'
 import axios from "axios";
 import locale from 'element-plus/lib/locale/lang/zh-cn'
-import 'element-plus/theme-chalk/el-message-box.css'
-import 'element-plus/theme-chalk/el-message.css'
+import 'element-plus/theme-chalk/index.css'
 
 axios.interceptors.request.use(
     config => {
