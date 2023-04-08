@@ -1,7 +1,7 @@
 from requests import post, get
 from time import sleep
 
-path = 'http://localhost:5000/v1/plugin/ocr'
+path = 'http://zhiming.somewang.top/v1/plugin/ocr'
 
 req = post(path, files={'file': open('test.jpg', 'rb')})
 uuid = req.json()['data']
