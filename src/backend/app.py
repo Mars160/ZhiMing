@@ -19,6 +19,8 @@ else:
     logging.basicConfig(level=logging.INFO)
 
 logging.info('服务启动中')
+if not os.path.exists(STATIC_FOLDER):
+    os.mkdir(STATIC_FOLDER)
 app = Flask(__name__, static_folder=STATIC_FOLDER, static_url_path='/plugin')
 set_global('app', app)
 app.config['JSON_AS_ASCII'] = False
