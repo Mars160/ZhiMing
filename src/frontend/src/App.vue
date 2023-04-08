@@ -6,11 +6,15 @@
 </template>
 
 <script setup>
-import LoginComponent from "@/components/common/LoginComponent.vue";
 import axios from "axios";
 import {ElMessage} from "element-plus";
 import 'element-plus/es/components/message/style/css'
-import {provide, ref} from "vue";
+import {defineAsyncComponent, provide, ref} from "vue";
+
+const LoginComponent = defineAsyncComponent(() => import(
+    /* webpackChunkName: "components/login-component" */
+    '@/components/common/LoginComponent.vue'
+    ))
 
 const show = ref(true)
 provide("show-login", show)
