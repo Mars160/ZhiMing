@@ -17,6 +17,8 @@
     "unplugin-icons": "^0.15.3",
     "unplugin-vue-components": "^0.23.0",
     "vue": "^3.2.13",
+    "vue-cropper": "^1.0.8",
+    "vue-cropperjs": "^5.0.0",
     "vue-router": "^4.0.3"
   },
   "devDependencies": {
