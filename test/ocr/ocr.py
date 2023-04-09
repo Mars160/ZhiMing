@@ -1,7 +1,7 @@
 from requests import post, get
 from time import sleep
 
-path = 'https://zhiming.somewang.top/v1/plugin/ocr'
+path = 'http://127.0.0.1:5000/v1/plugin/ocr'
 
 req = post(path, files={'file': open('test.jpg', 'rb')})
 try:
