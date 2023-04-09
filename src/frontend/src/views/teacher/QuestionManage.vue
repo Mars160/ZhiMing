@@ -172,6 +172,12 @@ function addNewQuestion(bid) {
     select_bid.value = bid
     dialogType.value = 'add'
     showDialog.value = true
+
+    select_qid.value = ''
+    select_qname.value = ''
+    select_qpoints.value = []
+    select_qpage.value = ''
+    select_qplace.value = ''
 }
 
 function getQuestions(bid) {

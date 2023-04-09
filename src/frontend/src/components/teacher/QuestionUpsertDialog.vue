@@ -259,6 +259,10 @@ function beforeImageUpload(file) {
         return false;
     }
 }
+
+function cancelClicked() {
+    show.value = false;
+}
 </script>
 
 <style scoped>
