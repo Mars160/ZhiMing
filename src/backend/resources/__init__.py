@@ -13,6 +13,7 @@ from .users import Users
 from .classes import Classes
 from .homeworks import Homeworks
 from .plugins import Plugins
+from .ping import Ping
 
 import os
 from plugins.tunnel import set_global
@@ -32,6 +33,7 @@ api.add_resource(Users, '/v1/users/<int:uid>', '/v1/users')
 api.add_resource(Classes, '/v1/classes/<int:cid>', '/v1/classes')
 api.add_resource(Homeworks, '/v1/homeworks')
 api.add_resource(Plugins, '/v1/plugins')
+api.add_resource(Ping, '/v1/ping')
 
 plugins = os.listdir('plugins')
 if '__pycache__' in plugins:
@@ -39,4 +41,4 @@ if '__pycache__' in plugins:
 plugins.remove('tunnel.py')
 for plugin in plugins:
     __import__('plugins.' + plugin)
-    logging.info('插件' + plugin + '加载完成')
+    logging.info('插件 %s 加载完成' % plugin)
