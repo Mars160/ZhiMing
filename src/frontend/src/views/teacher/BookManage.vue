@@ -11,7 +11,6 @@
                 <span class="book-info">{{ book.bname }}</span>
                 <span class="book-info">{{ book.gradeStr }}</span>
                 <el-button type="primary" @click="editBook(book.bid, book.bname, book.grade)">编辑</el-button>
-                <el-button type="danger" @click="deleteBook(book.bid)">删除</el-button>
             </el-card>
         </li>
         <li>

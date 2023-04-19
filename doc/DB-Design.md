@@ -8,12 +8,13 @@
 
 ### User
 
-| 字段    | 类型      | 含义     | 备注        |
-| ----- | ------- | ------ | --------- |
-| uid   | integer | 用户角色id | 主键，自增     |
-| uname | varchar | 用户名    |           |
-| role  | enum    | 用户角色   | 管理员、教师、学生 |
-| pwd   | varchar | 加密后的密码 |           |
+| 字段       | 类型      | 含义     | 备注        |
+| -------- | ------- | ------ | --------- |
+| uid      | integer | 用户角色id | 主键，自增     |
+| uname    | varchar | 用户名    |           |
+| role     | enum    | 用户角色   | 管理员、教师、学生 |
+| pwd      | varchar | 加密后的密码 |           |
+| nickname | varchar | 用户昵称   | 可以重复      |
 
 ### Book
 
@@ -45,6 +46,17 @@
 | ----- | ------- | ----- | ----- |
 | pid   | integer | 知识点id | 主键、自增 |
 | pname | varchar | 知识点名  | 不重复   |
+
+### Homework
+
+| 字段        | 类型        | 含义     | 备注      |
+| --------- | --------- | ------ | ------- |
+| hid       | integer   | 作业id   | 主键、自增   |
+| uid       | integer   | 用户id   |         |
+| qids      | text      | 问题id列表 | 用英文逗号分隔 |
+| timestamp | timestamp | 作业生成时间 | Unix时间戳 |
+
+
 
 ---
 
