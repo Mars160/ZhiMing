@@ -78,7 +78,8 @@ def create_student(name, pwd):
 def create_book():
     db.session.execute(
         Book.__table__.insert(),
-        [{'bname': fake.sentence(nb_words=2, variable_nb_words=True), 'grade': 41} for i in range(BOOK_COUNT)]
+        [{'bname': fake.sentence(nb_words=2, variable_nb_words=True), 'grade': randint(34, 35)} for i in range(BOOK_COUNT)]
+        #[{'bname': "一课一练", 'grade': 30}, {'bname': "课课练", "grade": 35}]
     )
     # for i in range(BOOK_COUNT):
     #     book = Book()

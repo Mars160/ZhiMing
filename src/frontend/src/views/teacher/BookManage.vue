@@ -67,15 +67,12 @@ function loadMoreBook() {
         const result = res.data.data
         result.forEach((book) => {
             if (!bidSet.has(book.uid)) {
-                book.gradeStr = number2Str[parseInt(book.grade / 10)] + '年级'
+                book.gradeStr = number2Str[parseInt(book.grade / 10) - 1] + '年级'
                 //十位 1: 一年级, 2: 二年级, 3: 三年级, 4: 四年级, 5: 五年级, 6: 六年级 个位 0: 上册, 5: 下册
-                switch (book.grade % 10) {
-                    case 0:
-                        book.gradeStr += '上册'
-                        break
-                    case 5:
-                        book.gradeStr += '下册'
-                        break
+                if(book.grade % 10 < 5) {
+                    book.gradeStr += '上册'
+                } else {
+                    book.gradeStr += '下册'
                 }
                 books.value.push(book)
             }
