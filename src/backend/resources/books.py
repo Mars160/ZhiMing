@@ -81,6 +81,7 @@ class Books(restful.Resource):
 
         # 删除RQB表中，bid为bid的记录
         rqbs.delete(synchronize_session=False)
+        db.session.query(RPQ).filter(RPQ.qid.in_(q_list)).delete(synchronize_session=False)
         # 删除Question表中，qid在q_list中的记录
         db.session.query(Question).filter(Question.qid.in_(q_list)).delete(synchronize_session=False)
         # 删除Book表中，bid为bid的记录
