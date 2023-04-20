@@ -200,18 +200,19 @@ class Questions(restful.Resource):
 
         # 不存在的pname
         new_pnames = list(set(point) - set(exist_pnames))
-        db.session.execute(
-            Point.__table__.insert(),
-            [{'pname': i} for i in new_pnames]
-        )
-        # 获取新添加的pid
-        new_pids = db.session.query(Point.pid).filter(Point.pname.in_(new_pnames)).all()
-        for i in new_pids:
-            exist_pids.append(i[0])
-        db.session.execute(
-            RPQ.__table__.insert(),
-            [{'qid': qid, 'pid': i} for i in exist_pids]
-        )
+        if len(new_pnames) > 0:
+            db.session.execute(
+                Point.__table__.insert(),
+                [{'pname': i} for i in new_pnames]
+            )
+            # 获取新添加的pid
+            new_pids = db.session.query(Point.pid).filter(Point.pname.in_(new_pnames)).all()
+            for i in new_pids:
+                exist_pids.append(i[0])
+            db.session.execute(
+                RPQ.__table__.insert(),
+                [{'qid': qid, 'pid': i} for i in exist_pids]
+            )
 
         self.UPDATE_TIME -= 1
 
