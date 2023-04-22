@@ -101,6 +101,7 @@ class Questions(restful.Resource):
             point = data['point']
             page = data['page']
             place = data['place']
+            level = data['level'] if 'level' in data else 0
 
             # 查看bid是否存在
             book = db.session.query(Book).filter(Book.bid == bid).first()
@@ -111,7 +112,7 @@ class Questions(restful.Resource):
 
             question = Question()
             question.qname = qname
-            question.level = 0
+            question.level = level
 
             db.session.add(question)
             db.session.flush()
