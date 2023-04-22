@@ -184,6 +184,8 @@ class Questions(restful.Resource):
         db.session.query(RPQ).filter(RPQ.qid == qid).delete()
         # 删除RQB表中的记录
         db.session.query(RQB).filter(RQB.qid == qid).delete()
+
+        db.session.query(RUQ).filter(RUQ.qid == qid).delete()
         # 删除Question表中的记录
         db.session.query(Question).filter(Question.qid == qid).delete()
         db.session.commit()
