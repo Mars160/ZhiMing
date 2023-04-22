@@ -156,7 +156,7 @@ function gradeInt2Str(gradeInt) {
             str = '六'
             break
     }
-    return str + '年级' + (one === 5 ? ' 上册' : ' 下册')
+    return str + '年级' + (one < 5 ? ' 上册' : ' 下册')
 }
 
 function randomTagColor() {
