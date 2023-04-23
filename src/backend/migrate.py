@@ -1,4 +1,5 @@
 import math
+import random
 
 TEACHET_COUNT = 5
 STUDENT_EACH_TEACHER = 30
@@ -15,8 +16,10 @@ import click
 from faker import Faker
 from random import randint, choices
 from models import *
+from flask_migrate import Migrate
 
 fake = Faker(locale='zh_CN')
+migrate = Migrate(app, db)
 
 
 def create_db():
@@ -78,8 +81,9 @@ def create_student(name, pwd):
 def create_book():
     db.session.execute(
         Book.__table__.insert(),
-        [{'bname': fake.sentence(nb_words=2, variable_nb_words=True), 'grade': randint(34, 35)} for i in range(BOOK_COUNT)]
-        #[{'bname': "一课一练", 'grade': 30}, {'bname': "课课练", "grade": 35}]
+        [{'bname': fake.sentence(nb_words=2, variable_nb_words=True), 'grade': randint(34, 35)} for i in
+         range(BOOK_COUNT)]
+        # [{'bname': "一课一练", 'grade': 30}, {'bname': "课课练", "grade": 35}]
     )
     # for i in range(BOOK_COUNT):
     #     book = Book()
@@ -112,13 +116,13 @@ def create_question():
     for book in books:
         db.session.execute(
             Question.__table__.insert(),
-            [{'qname': fake.paragraph(nb_sentences=5, variable_nb_sentences=True), 'level': 1} for i in
-             range(QUESTION_EACH_BOOK)]
-        )
-        db.session.execute(
-            RQB.__table__.insert(),
-            [{'bid': book.bid, 'qid': now_qid + i, 'page': randint(1, MAX_PAGE), 'place': randint(1, MAX_PLACE)} for i
-             in range(QUESTION_EACH_BOOK)]
+            [{
+                'qname': fake.paragraph(nb_sentences=5, variable_nb_sentences=True),
+                'level': 1,
+                'bid': book.bid,
+                'page': randint(1, MAX_PAGE),
+                'place': random.choice(["一", '二', '三', '四']) + '.%d' % randint(1, MAX_PLACE),
+            } for i in range(QUESTION_EACH_BOOK)]
         )
         db.session.execute(
             RPQ.__table__.insert(),
@@ -126,6 +130,15 @@ def create_question():
              choices(pids, k=randint(1, POINTS_MAX_EACH_QUESTION))]
         )
         now_qid += QUESTION_EACH_BOOK
+
+    db.session.commit()
+
+
+def create_tree():
+    si = SimilarityTree()
+    si.newTree()
+
+    db.session.add(si)
     db.session.commit()
 
 
@@ -170,6 +183,9 @@ def create(item):
     elif item == 'question':
         create_question()
         click.echo('题目创建成功')
+    elif item == 'tree':
+        create_tree()
+        click.echo('余弦查找树创建成功')
     elif item == 'wrong':
         create_wrong()
         click.echo('错题创建成功')
@@ -193,11 +209,13 @@ def create(item):
         click.echo('知识点创建成功...')
         create_question()
         click.echo('题目创建成功...')
+        create_tree()
+        click.echo('余弦查找树创建成功...')
         create_wrong()
         click.echo('错题创建成功...')
         click.echo('所有数据创建成功')
     else:
-        click.echo('参数错误，可选参数：db, admin, teacher, student, book, points, question, wrong, prod, all, test')
+        click.echo('参数错误，可选参数：db, admin, teacher, student, book, points, question, wrong, prod, all, test, tree')
 
 
 def drop_wrong():
@@ -207,7 +225,6 @@ def drop_wrong():
 
 def drop_question():
     db.session.query(RPQ).delete()
-    db.session.query(RQB).delete()
     db.session.query(Question).delete()
     db.session.commit()
 

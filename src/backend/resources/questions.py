@@ -1,8 +1,9 @@
 from .ext import *
-
+import numpy as np
 
 class Questions(restful.Resource):
     UPDATE_TIME = 100
+    COUNT_FROM = 3600
 
     @jwt_required()
     def get(self):
@@ -25,20 +26,13 @@ class Questions(restful.Resource):
             response['msg'] = 'parameter bid is required'
             return response
 
-        ques = db.session.query(
-            RQB.bid,
-            RQB.page,
-            RQB.place,
-            Question.qid,
-            Question.qname,
-            Question.level,
-        ).filter(
-            RQB.bid == bid,
-            RQB.qid == Question.qid,
-            RQB.page >= (page_list[0] if page_list else 0),
-            RQB.page <= (page_list[1] if page_list else 999999),
+        ques = db.session.query(Question).filter(
+            Question.bid == bid,
+            Question.page >= (page_list[0] if page_list else 0),
+            Question.page <= (page_list[1] if page_list else 999999)
         )
-        pages = ques.count() // limit + 1
+
+        # pages = ques.count() // limit + 1
         ques = ques.limit(limit).offset((page - 1) * limit).subquery()
 
         query = db.session.query(
@@ -113,17 +107,12 @@ class Questions(restful.Resource):
             question = Question()
             question.qname = qname
             question.level = level
+            question.bid = bid
+            question.place = place
+            question.page = page
 
             db.session.add(question)
             db.session.flush()
-
-            # 在RQB表中添加记录
-            rqb = RQB()
-            rqb.bid = bid
-            rqb.qid = question.qid
-            rqb.page = page
-            rqb.place = place
-            db.session.add(rqb)
 
             with db.session.no_autoflush:
                 self.add_not_exist_point(point, question.qid)
@@ -156,14 +145,11 @@ class Questions(restful.Resource):
                 response['msg'] = 'question not found'
                 return response
             q.qname = qname
+            q.page = page
+            q.place = place
 
             # 在RPQ表中修改记录
             db.session.query(RPQ).filter(RPQ.qid == qid).delete()
-            # 在RQB表中修改记录
-            db.session.query(RQB).filter(RQB.qid == qid).update({
-                "page": page,
-                "place": place
-            })
 
             with db.session.no_autoflush:
                 self.add_not_exist_point(point, qid)
@@ -183,8 +169,6 @@ class Questions(restful.Resource):
 
         # 删除RPQ表中的记录
         db.session.query(RPQ).filter(RPQ.qid == qid).delete()
-        # 删除RQB表中的记录
-        db.session.query(RQB).filter(RQB.qid == qid).delete()
 
         db.session.query(RUQ).filter(RUQ.qid == qid).delete()
         # 删除Question表中的记录

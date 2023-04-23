@@ -3,6 +3,9 @@ from json import dumps
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from ext import db
+from algorithm.CosineSimilarityAVLTree import CosineSimilarityAVLTree
+from pickle import dumps, loads
+from sqlalchemy import func
 
 Column = db.Column
 Integer = db.Integer
@@ -11,7 +14,8 @@ TEXT = db.TEXT
 ForeignKey = db.ForeignKey
 TIMESTAMP = db.TIMESTAMP
 Boolean = db.Boolean
-
+FLOAT = db.FLOAT
+BLOB = db.LargeBinary
 
 class User(db.Model):
     __tablename__ = 'User'
@@ -81,6 +85,9 @@ class Question(db.Model):
     qid = Column(Integer, primary_key=True, autoincrement=True, comment='题目id')
     qname = Column(TEXT, nullable=False, comment='题干')
     level = Column(Integer, nullable=False, comment='难度等级')
+    bid = Column(Integer, ForeignKey('Book.bid'), nullable=False, comment='练习册id')
+    page = Column(Integer, nullable=False, comment='页码')
+    place = Column(VARCHAR(50), nullable=False, comment='位置')
 
     def __repr__(self):
         return dumps({
@@ -139,25 +146,25 @@ class RUC(db.Model):
         })
 
 
-class RQB(db.Model):
-    __tablename__ = 'RQB'
-    __table_args__ = (
-        {'comment': '题目练习册关系表'}
-    )
-    qbid = Column(Integer, primary_key=True, autoincrement=True, comment='关系id')
-    qid = Column(Integer, ForeignKey('Question.qid'), nullable=False, comment='题目id')
-    bid = Column(Integer, ForeignKey('Book.bid'), nullable=False, comment='练习册id')
-    page = Column(Integer, nullable=False, comment='页码')
-    place = Column(Integer, nullable=False, comment='位置')
-
-    def __repr__(self):
-        return dumps({
-            'qbid': self.qbid,
-            'qid': self.qid,
-            'bid': self.bid,
-            'page': self.page,
-            'place': self.place
-        })
+# class RQB(db.Model):
+#     __tablename__ = 'RQB'
+#     __table_args__ = (
+#         {'comment': '题目练习册关系表'}
+#     )
+#     qbid = Column(Integer, primary_key=True, autoincrement=True, comment='关系id')
+#     qid = Column(Integer, ForeignKey('Question.qid'), nullable=False, comment='题目id')
+#     bid = Column(Integer, ForeignKey('Book.bid'), nullable=False, comment='练习册id')
+#     page = Column(Integer, nullable=False, comment='页码')
+#     place = Column(Integer, nullable=False, comment='位置')
+#
+#     def __repr__(self):
+#         return dumps({
+#             'qbid': self.qbid,
+#             'qid': self.qid,
+#             'bid': self.bid,
+#             'page': self.page,
+#             'place': self.place
+#         })
 
 
 class RPQ(db.Model):
@@ -211,3 +218,55 @@ class Homework(db.Model):
             'uid': self.uid,
             'qids': self.qids
         })
+
+
+class SimilarityTree(db.Model):
+    __tablename__ = 'SimilarityTree'
+    __table_args__ = ({
+        'comment': '题目的相似树'
+    })
+    sid = Column(Integer, primary_key=True, autoincrement=True, comment='相似度id')
+    tree = Column(BLOB, comment='余弦相似树')
+    qid2node = Column(BLOB, comment='余弦相似树节点查询')
+    qid2pids = Column(BLOB, comment='余弦相似树属性')
+
+    def newTree(self):
+        rpqs = db.session.query(RPQ).all()
+
+        treeInstance = CosineSimilarityAVLTree()
+
+        treeInstance.pid_max = db.session.query(func.max(Point.pid).label('mp')).one().mp
+        treeInstance.pid_min = db.session.query(func.min(Point.pid).label('mp')).one().mp
+
+        qid2pids = treeInstance.qid2pids
+
+
+
+        for r in rpqs:
+            sqid = str(r.qid)
+            if sqid in qid2pids:
+                qid2pids[sqid].add(r.pid)
+            else:
+                qid2pids[sqid] = {r.pid}
+
+        treeInstance.build(0.5)
+        self.tree = dumps(treeInstance)
+        self.qid2node = dumps(treeInstance.qid2node)
+        self.qid2pids = dumps(treeInstance.qid2pids)
+
+    def getTree(self) -> CosineSimilarityAVLTree:
+        t = loads(self.tree, fix_imports=True)
+        t.qid2node = loads(self.qid2node, fix_imports=True)
+        t.qid2pids = loads(self.qid2pids, fix_imports=True)
+        return t
+
+
+# class Similarity(db.Model):
+#     __tablename__ = 'Similarity'
+#     __table_args__ = ({
+#         'comment': '题目间的相似度（余弦相似度）'
+#     })
+#     sid = Column(Integer, primary_key=True, autoincrement=True, comment='相似度id')
+#     qid1 = Column(Integer, ForeignKey('Question.qid'), nullable=False, comment='题目1id')
+#     qid2 = Column(Integer, ForeignKey('Question.qid'), nullable=False, comment='题目2id')
+#     similarity = Column(FLOAT, primary_key=True, autoincrement=True, comment='相似度')

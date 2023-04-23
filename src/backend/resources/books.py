@@ -15,19 +15,15 @@ class Books(restful.Resource):
 
         book_a = books.all()
         response['data'] = {}
-        response['data'] = [{"bid": i.bid, "bname": i.bname, "grade": i.grade, 'qcount': 0} for i in book_a]
+        response['data'] = [{"bid": i.bid, "bname": i.bname, "grade": i.grade} for i in book_a]
 
-        books = books.subquery()
-        re = db.session.query(
-            books.c.bid,
-            func.count(RQB.qid).label('count'),
-        ).filter(books.c.bid == RQB.bid).group_by(RQB.bid).all()
-        # 根据bid更新response中的qcount
-        bid2count = {}
-        for i in re:
-            bid2count[str(i.bid)] = i.count
-        for i in response['data']:
-            i['qcount'] = bid2count[str(i['bid'])] if str(i['bid']) in bid2count else 0
+
+        # # 根据bid更新response中的qcount
+        # bid2count = {}
+        # for i in re:
+        #     bid2count[str(i.bid)] = i.count
+        # for i in response['data']:
+        #     i['qcount'] = bid2count[str(i['bid'])] if str(i['bid']) in bid2count else 0
 
         return response
 
@@ -75,16 +71,15 @@ class Books(restful.Resource):
             return response
 
         # 在RQB中查找是否有关联
-        rqbs = db.session.query(RQB).filter(RQB.bid == bid)
-        rqb_a = rqbs.all()
+        qids = db.session.query(Question).filter(Question.bid == bid)
+        rqb_a = qids.all()
         q_list = [rqb.qid for rqb in rqb_a]
 
         # 删除RQB表中，bid为bid的记录
-        rqbs.delete(synchronize_session=False)
         db.session.query(RPQ).filter(RPQ.qid.in_(q_list)).delete(synchronize_session=False)
         db.session.query(RUQ).filter(RUQ.qid.in_(q_list)).delete(synchronize_session=False)
         # 删除Question表中，qid在q_list中的记录
-        db.session.query(Question).filter(Question.qid.in_(q_list)).delete(synchronize_session=False)
+        qids.delete(synchronize_session=False)
         # 删除Book表中，bid为bid的记录
         db.session.query(Book).filter(Book.bid == bid).delete(synchronize_session=False)
 
