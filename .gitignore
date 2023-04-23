@@ -163,3 +163,5 @@ dbconfig.py
 
 #后端static
 plugin-static/
+
+migrations/
